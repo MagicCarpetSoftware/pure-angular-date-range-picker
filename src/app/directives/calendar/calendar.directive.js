@@ -11,6 +11,7 @@ export function Calendar() {
       getInterceptors: '&interceptors',
       rangeStart: '&',
       rangeEnd: '&',
+      changeYear: '=',
       selectedDay: '&',
       minMonth: '&',
       maxMonth: '&',
@@ -93,6 +94,18 @@ class CalendarController {
       this.setValue();
       this.updateDaysProperties(this.calendar.monthWeeks);
     });
+  }
+
+  monthChanged(month) {
+    let mo = this.calendar.currentCalendar;
+    this.month = mo.clone().month(month);
+    this.calendar = this.buildCalendar(this.month.clone());
+  }
+
+  yearChanged(year) {
+    let mo = this.calendar.currentCalendar;
+    this.month = mo.clone().year(year);
+    this.calendar = this.buildCalendar(this.month.clone());
   }
 
   updateDaysProperties(monthWeeks) {

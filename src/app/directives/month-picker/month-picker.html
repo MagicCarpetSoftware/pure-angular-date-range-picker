@@ -1,0 +1,4 @@
+<select ng-options= "month as month.label for month in monthPicker.months track by month.value"
+        ng-model= 'monthPicker.month'
+        ng-change="monthPicker.onMonthChange()" />
+

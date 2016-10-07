@@ -12,6 +12,7 @@ export function ObDayPicker() {
       maxDay: '&',
       monthFormat: '&',
       inputFormat: '&',
+      changeYear: '=',
       onApply: '&',
       disabled: '&',
       formName: '@name',
