@@ -1,14 +1,12 @@
 describe('directive year-picker', function() {
-  let element, moment, defaultOptions, $compile, $scope, $rootScope, picker, format, $timeout;
+  let element, moment, $compile, $scope, $rootScope;
 
   beforeEach(angular.mock.module('obDateRangePicker'));
 
-  beforeEach(inject((_$compile_, _$rootScope_, _moment_ , _$timeout_) => {
-    format = 'DD-MM-YYYY';
+  beforeEach(inject((_$compile_, _$rootScope_, _moment_ ) => {
     $compile = _$compile_;
     $rootScope = _$rootScope_;
     moment = _moment_;
-    $timeout = _$timeout_;
     $scope = $rootScope.$new();
     $scope.yearChanged = () => {
       return 1
@@ -67,7 +65,7 @@ describe('directive year-picker', function() {
   });
 
   describe('outputs', () => {
-    var select, options
+    var select
     beforeEach(() => {
       spyOn($scope, 'yearChanged')
       prepare({
@@ -76,7 +74,6 @@ describe('directive year-picker', function() {
         maxYear: 2020
       })
       select = element.find('select');
-      options = element.find('option');
     });
 
     it('defaults to provided year', () => {

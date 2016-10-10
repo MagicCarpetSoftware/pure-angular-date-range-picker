@@ -17,16 +17,16 @@ export function MonthPicker() {
 }
 
 class MonthPickerController {
-  constructor($document, $element, $scope, $timeout, moment) {
+  constructor(moment) {
     'ngInject';
 
-    debugger
+    this.Moment = moment;
     this.months = this.generateMonths()
     this.month = this.defaultMonth();
   }
 
   defaultMonth() {
-    let month = this.selectedMonth() || moment().month()
+    let month = this.selectedMonth() || this.Moment().month()
     for(var i = 0; i <= this.months.length; i++) {
       if(this.months[i].value == month) {
         return this.months[i];
@@ -39,7 +39,7 @@ class MonthPickerController {
     for(var i = 0; i <= 11; i++) {
       months.push({
         value: i,
-        label: moment().month(i).format('MMMM')
+        label: this.Moment().month(i).format('MMMM')
       })
     }
     return months

@@ -15,7 +15,7 @@
       <month-picker month-changed="month.monthChanged(newMonth)" selected-month="month.selectedDay().month()" />
     </span>
     <span ng-if="month.changeYear">
-      <year-picker year-changed="month.yearChanged(year)"/>
+      <year-picker year-changed="month.yearChanged(year)" selected-year="month.selectedDay().year()" />
     </span>
 
     <span ng-if="!month.changeYear">

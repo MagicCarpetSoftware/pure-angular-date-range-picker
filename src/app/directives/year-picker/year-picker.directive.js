@@ -20,15 +20,16 @@ export function YearPicker() {
 
 class YearPickerController {
 
-  constructor($document, $element, $scope, $timeout, moment) {
+  constructor(moment) {
     'ngInject';
 
+    this.Moment = moment;
     this.years = this.generateYears();
     this.year = this.defaultYear();
   }
 
   defaultYear() {
-    let year = this.selectedYear() || moment().year();
+    let year = this.selectedYear() || this.Moment().year();
     for(var i = 0; i <= this.years.length; i++) {
       if(this.years[i].value == year) {
         return this.years[i];
@@ -47,12 +48,12 @@ class YearPickerController {
 
   startYear() {
     if(this.minYear()) { return this.minYear() }
-    return moment().year() - 80
+    return this.Moment().year() - 80
   }
 
   endYear() {
     if(this.maxYear()) { return this.maxYear() }
-    return moment().year() + 5
+    return this.Moment().year() + 5
   }
 
   onYearChange() {

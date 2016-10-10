@@ -24,6 +24,7 @@ describe('directive date-range-picker', function () {
           week-start="calendar.weekStart"
           month="calendar.rangeStart"
           interceptors="calendar.endCalendarInterceptors"
+          change-year="calendar.changeYear"
           range-start="calendar.rangeStart"
           range-end="calendar.rangeEnd"
           selected-day="calendar.rangeStart"
@@ -91,5 +92,33 @@ describe('directive date-range-picker', function () {
 
     let inputContainer = elem.querySelector('.input-container');
     expect(inputContainer).toBeNull();
+  });
+
+  describe('changeYear', () => {
+    it('should behave...', function() {
+      let options = Object.assign(defaultOptions, {
+        changeYear: true
+      });
+      prepare(options);
+      let yearSelectElement = elem.querySelector('year-picker select');
+      let monthSelectElement = elem.querySelector('month-picker select');
+
+      expect(yearSelectElement.value).toBe('2015');
+      expect(monthSelectElement.value).toBe('10');
+      expect(monthSelectElement.querySelectorAll('option').length).toBe(12);
+    });
+
+    it('should load up selected-day', () => {
+      let options = Object.assign(defaultOptions, {
+        changeYear: true,
+        rangeStart: moment('01-02-2015', format)
+      });
+      prepare(options);
+      let yearSelectElement = elem.querySelector('year-picker select');
+      let monthSelectElement = elem.querySelector('month-picker select');
+
+      expect(yearSelectElement.value).toBe('2015');
+      expect(monthSelectElement.value).toBe('1');
+    });
   });
 });
