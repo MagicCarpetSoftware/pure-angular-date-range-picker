@@ -246,6 +246,7 @@
             min-day="single.min"
             max-day="single.max"
             api="single.dayPickerApi"
+            display-format="single.inputFormat"
             change-year='true'
             selected-day="2000/10/10"
             on-apply="single.onApply(day)"
@@ -352,12 +353,13 @@
         this.weekStart = 'su';
         this.dayPickerApi = {};
         this.opens = 'left';
-        this.format = 'MMM DD, YYYY';
+        this.format = 'YYYY-MM-DD';
         this.selectedDay = moment().add(-10, 'y').subtract(-2, 'M').format(this.format);
         this.min = moment().subtract(5, 'd').format(this.format);
         this.disabled = true;
         this.validateInput = true;
         this.autoApply = true;
+        this.inputFormat = 'DD/MM/YYYY';
 
         this.render = function(e) {
           if(e) {
