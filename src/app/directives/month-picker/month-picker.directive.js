@@ -4,7 +4,7 @@ export function MonthPicker() {
   let directive = {
     restrict: 'E',
     scope: {
-      selectedMonth: '&?',
+      selectedMonth: '=',
       monthChanged: '&?'
     },
     controller: MonthPickerController,
@@ -26,10 +26,10 @@ class MonthPickerController {
   }
 
   defaultMonth() {
-    let month = this.selectedMonth() || this.Moment().month()
+    let month = this.selectedMonth || this.Moment().month()
     for(var i = 0; i <= this.months.length; i++) {
       if(this.months[i].value == month) {
-        return this.months[i];
+        return this.months[i].value;
       }
     }
   }

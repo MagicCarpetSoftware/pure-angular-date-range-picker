@@ -5,7 +5,7 @@ export function YearPicker() {
     restrict: 'E',
     scope: {
       yearChanged: '&?',
-      selectedYear: '&',
+      selectedYear: '=',
       minYear: '&',
       maxYear: '&'
     },
@@ -25,17 +25,17 @@ class YearPickerController {
 
     this.Moment = moment;
     this.years = this.generateYears();
-    this.year = this.defaultYear();
+    this.selectedYear = this.selectedYear || this.defaultYear();
   }
 
   defaultYear() {
-    let year = this.selectedYear() || this.Moment().year();
+    let year = this.selectedYear || this.Moment().year();
     for(var i = 0; i <= this.years.length; i++) {
       if(this.years[i].value == year) {
-        return this.years[i];
+        return this.years[i].value;
       }
     }
-    return this.years[0];
+    return this.years[0].value;
   }
 
   generateYears() {
@@ -57,6 +57,6 @@ class YearPickerController {
   }
 
   onYearChange() {
-    this.yearChanged({ year: this.year.value })
+    this.yearChanged({ year: this.selectedYear })
   }
 }

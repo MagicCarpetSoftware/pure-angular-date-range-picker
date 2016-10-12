@@ -1,4 +1,3 @@
-<select ng-options= "year as year.label for year in yearPicker.years track by year.value"
-        ng-model= 'yearPicker.year'
-        ng-change="yearPicker.onYearChange()" />
-
+<select ng-options= 'year.value as year.label for year in yearPicker.years'
+        ng-model= 'yearPicker.selectedYear'
+        ng-change='yearPicker.onYearChange()' />

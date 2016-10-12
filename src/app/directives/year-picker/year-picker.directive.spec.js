@@ -32,8 +32,10 @@ describe('directive year-picker', function() {
     var select, options
     beforeEach(() => {
       spyOn($scope, 'yearChanged')
+
       prepare({
         minYear: 2000,
+        selectedYear: $scope.selectedYear,
         maxYear: 2020
       })
       select = element.find('select');
@@ -46,7 +48,7 @@ describe('directive year-picker', function() {
     });
 
     it('selects the current year', () => {
-      expect(select.val()).toBe(moment().year().toString());
+      expect(select.val()).toBe('number:' + moment().year().toString());
     });
 
     it('first option is latest year', () => {
@@ -58,7 +60,7 @@ describe('directive year-picker', function() {
     });
 
     it('callback', () => {
-      select.val(2017);
+      select.val('number:2017');
       select.triggerHandler('change');
       expect($scope.yearChanged).toHaveBeenCalled();
     });
@@ -77,7 +79,7 @@ describe('directive year-picker', function() {
     });
 
     it('defaults to provided year', () => {
-      expect(select.val()).toEqual('2005');
+      expect(select.val()).toEqual('number:2005');
     });
   });
 });

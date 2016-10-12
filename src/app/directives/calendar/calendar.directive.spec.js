@@ -1,4 +1,4 @@
-describe('directive date-range-picker', function () {
+describe('directive calendar', function () {
   var element, moment, defaultOptions, $compile, $scope, $rootScope, format = 'DD-MM-YYYY', elem;
 
   beforeEach(angular.mock.module('obDateRangePicker'));
@@ -103,8 +103,8 @@ describe('directive date-range-picker', function () {
       let yearSelectElement = elem.querySelector('year-picker select');
       let monthSelectElement = elem.querySelector('month-picker select');
 
-      expect(yearSelectElement.value).toBe('2015');
-      expect(monthSelectElement.value).toBe('10');
+      expect(yearSelectElement.value).toBe('number:2015');
+      expect(monthSelectElement.value).toBe('number:10');
       expect(monthSelectElement.querySelectorAll('option').length).toBe(12);
     });
 
@@ -117,8 +117,9 @@ describe('directive date-range-picker', function () {
       let yearSelectElement = elem.querySelector('year-picker select');
       let monthSelectElement = elem.querySelector('month-picker select');
 
-      expect(yearSelectElement.value).toBe('2015');
-      expect(monthSelectElement.value).toBe('1');
+      expect(yearSelectElement.value).toBe('number:2015');
+
+      expect(monthSelectElement.value).toBe('number:1');
     });
   });
 });

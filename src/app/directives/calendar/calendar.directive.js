@@ -38,6 +38,8 @@ class CalendarController {
     this.Scope = $scope;
     this.Attrs = $attrs;
     this.api && this.setApi();
+    this.selectedYear = this.selectedDay().year()
+    this.selectedMonth = this.selectedDay().month()
     this.render();
   }
 
@@ -114,6 +116,7 @@ class CalendarController {
     let selectedDay = this.selectedDay();
     let rangeStart = this.rangeStart();
     let rangeEnd = this.rangeEnd();
+
     monthWeeks.forEach((week) => {
       week.forEach((day) => {
         day.selected = day.mo.isSame(selectedDay || null, 'day');
@@ -158,7 +161,8 @@ class CalendarController {
         tmpDate = tmpDate.clone().add(1, 'd');
       }
     }
-
+    this.selectedMonth = date.month()
+    this.selectedYear = date.year()
     this.updateDaysProperties(monthWeeks);
 
     return {

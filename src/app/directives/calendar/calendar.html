@@ -12,10 +12,11 @@
 
 
     <span ng-if="month.changeYear">
-      <month-picker month-changed="month.monthChanged(newMonth)" selected-month="month.selectedDay().month()" />
+      <month-picker month-changed="month.monthChanged(newMonth)" selected-month="month.selectedMonth" />
     </span>
     <span ng-if="month.changeYear">
-      <year-picker year-changed="month.yearChanged(year)" selected-year="month.selectedDay().year()" />
+      <year-picker year-changed="month.yearChanged(year)"
+                   selected-year="month.selectedYear" />
     </span>
 
     <span ng-if="!month.changeYear">
