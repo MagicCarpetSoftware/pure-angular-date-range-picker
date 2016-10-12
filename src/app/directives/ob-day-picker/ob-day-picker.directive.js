@@ -3,6 +3,7 @@ export function ObDayPicker() {
 
   let directive = {
     restrict: 'E',
+    priority: 200,
     scope: {
       weekStart: '&',
       selectedDay: '=?',
@@ -11,7 +12,7 @@ export function ObDayPicker() {
       minDay: '&',
       maxDay: '&',
       monthFormat: '&',
-      inputFormat: '&',
+      displayFormat: '&',
       changeYear: '=',
       onApply: '&',
       disabled: '&',
@@ -40,10 +41,9 @@ class ObDayPickerController {
     this.$timeout = $timeout;
     this.Moment = moment;
     this.formName = this.formName || 'dayPickerInput';
-
     this.setOpenCloseLogic();
     this._selectedDay = this.getSelectedDay();
-    this.value = this.Moment(this._selectedDay).format(this.getFormat());
+    this.value = this.Moment(this._selectedDay).format(this.getDisplayFormat());
     this.setCalendarInterceptors();
     this.calendarApi = {};
 
@@ -128,7 +128,7 @@ class ObDayPickerController {
     this.applyValidity(this.checkIfDayIsValid(day));
     if (!day.isSame(this._selectedDay, 'day')) {
       this.calendarApi.render();
-      this.value = this.Moment(day).format(this.getFormat());
+      this.value = this.Moment(day).format(this.getDisplayFormat());
       this._selectedDay = day;
 
       this.$timeout(() => {
@@ -160,7 +160,7 @@ class ObDayPickerController {
         break;
       case 27:
         this.isPickerVisible = false;
-        this.value = this._selectedDay.format(this.getFormat());
+        this.value = this._selectedDay.format(this.getDisplayFormat());
         break;
       default:
         break;
@@ -168,7 +168,7 @@ class ObDayPickerController {
   }
 
   getInputValue() {
-    return this.Moment(this.value, this.getFormat(), true);
+    return this.Moment(this.value, this.getDisplayFormat(), true);
   }
 
   onBlur() {
@@ -193,7 +193,7 @@ class ObDayPickerController {
   }
 
   checkIfDayIsValid(value) {
-    let day = this.Moment(value, this.getFormat(), true);
+    let day = this.Moment(value, this.getDisplayFormat(), true);
     let minDay = this._getMinDay();
     let maxDay = this._getMaxDay();
     let isValid = day.isValid();
@@ -233,6 +233,10 @@ class ObDayPickerController {
 
   getSelectedDay() {
     return this.Moment(this.selectedDay || this.Moment(), this.getFormat());
+  }
+
+  getDisplayFormat() {
+    return this.displayFormat() || this.getFormat();
   }
 
   getFormat() {
