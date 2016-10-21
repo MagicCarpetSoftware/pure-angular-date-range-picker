@@ -3,6 +3,7 @@ export function ObDayPicker() {
 
   let directive = {
     restrict: 'E',
+    priority: 200,
     scope: {
       weekStart: '&',
       selectedDay: '=?',
