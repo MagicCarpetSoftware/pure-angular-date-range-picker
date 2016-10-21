@@ -6,6 +6,8 @@
          ng-model="dayPicker.value"
          ng-change="dayPicker.updateValidity()"
          ng-keydown="dayPicker.dateInputEntered($event, dayPicker.value)"
+         ui-mask="?99/99/9999"
+         ui-mask-placeholder="__/__/____"
          ng-click="dayPicker.showPicker()"
          ng-disabled="dayPicker.disabled()"/>
   <div class="picker" ng-show="dayPicker.isPickerVisible">
