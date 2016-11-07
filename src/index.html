@@ -166,6 +166,7 @@
           api="range.dateRangeApi"
           on-apply="range.rangeApplied(start, end)"
           ranges="range.ranges"
+          default-empty="range.defaultEmpty"
           range="range.range"
           format="range.format"
           week-start="range.weekStart"
@@ -299,11 +300,9 @@
         this.format = 'DD-MM-YYYY';
         this.autoApply = false;
         this.linked = true;
+        this.defaultEmpty = true;
         this.calendarsAlwaysOn = true;
-        this.range = {
-          start: moment(),
-          end: moment()
-        };
+        this.range = undefined;
 
         this.ranges = [
           {

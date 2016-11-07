@@ -44,6 +44,7 @@ describe('directive ob-date-range-picker', function () {
         range="picker.range"
         ranges="picker.ranges"
         week-days-name="picker.weekDaysName"
+        default-empty="picker.defaultEmpty"
         min-day="picker.getMinDay()"
         max-day="picker.getMaxDay()"
         month-format="picker.monthFormat"
@@ -120,6 +121,54 @@ describe('directive ob-date-range-picker', function () {
 
     expect(picker.preRanges.length).toEqual(0);
     expect(picker.isPickerVisible).toEqual(true);
+  });
+
+  describe('defaultEmpty', function() {
+    describe('true', function() {
+
+      it('should not select dates if ranges empty', function() {
+        let options = Object.assign({}, defaultOptions);
+        options.defaultEmpty = true;
+        options.range = {};
+        prepare(options);
+
+        $rootScope.$digest();
+
+        expect(picker.range.start).toBeUndefined();
+        picker.togglePicker();
+        $rootScope.$digest();
+
+        expect(picker.range.start).not.toBeUndefined();
+      });
+
+      it('should select dates if ranges provided', function() {
+        let options = Object.assign({}, defaultOptions);
+        options.defaultEmpty = true;
+        options.range = {
+          start: moment(),
+          end: moment()
+        };
+        prepare(options);
+        $rootScope.$digest();
+
+        expect(picker.range.start).not.toBeUndefined();
+      });
+    });
+
+    describe('false', function() {
+      it('should select dates if ranges provided', function() {
+        let options = Object.assign({}, defaultOptions);
+        options.defaultEmpty = true;
+        options.range = {
+          start: moment(),
+          end: moment()
+        };
+        prepare(options);
+        $rootScope.$digest();
+
+        expect(picker.range.start).not.toBeUndefined();
+      });
+    });
   });
 
   it('should not close the picker when not set to auto apply', () => {

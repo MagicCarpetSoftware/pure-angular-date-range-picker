@@ -4,13 +4,14 @@ export function ObDateRangePicker() {
   let directive = {
     restrict: 'E',
     scope: {
-      weekStart: '&', 
+      weekStart: '&',
       range: '=?',
       weekDaysName: '&',
       format: '&',
       ranges: '&',
       minDay: '&',
       maxDay: '&',
+      defaultEmpty: '&',
       monthFormat: '&',
       inputFormat: '&',
       onApply: '&',
@@ -38,7 +39,7 @@ class ObDateRangePickerController {
     this.Document = $document;
     this.Scope = $scope;
     this.Moment = moment;
-    this.range = this.range || {};  
+    this.range = this.range || {};
     this.pickerApi = {};
     this.isCustomVisible = this.calendarsAlwaysOn();
 
@@ -70,14 +71,16 @@ class ObDateRangePickerController {
 
   render() {
     this._range = {
-      start: this.Moment(),
-      end: this.Moment()
+      start: this.defaultEmpty() ? undefined: this.Moment(),
+      end: this.defaultEmpty() ? undefined: this.Moment()
     };
+
     this.setPredefinedStatus();
 
     if (this.range.start &&
       this.range.end && !this.Moment.isMoment(this.range.start) && !this.Moment.isMoment(this.range.end) &&
-      this.format()) {
+      this.format() && !this.defaultEmpty()) {
+
       this._range = {
         start: this.Moment(this.range.start, this.getFormat()),
         end: this.Moment(this.range.end, this.getFormat())
@@ -87,15 +90,15 @@ class ObDateRangePickerController {
         start: this.range.start,
         end: this.range.end
       };
-    } else if (this.preRanges.length > 1) {
+    } else if (this.preRanges.length > 1 && !this.defaultEmpty()) {
       let firstPreRange = this.preRanges[0];
       this._range.start = firstPreRange.start;
       this._range.end = firstPreRange.end;
     }
 
-    if (this._range.start.isAfter(this._range.end)) {
+    if (this._range.start && this._range.start.isAfter(this._range.end)) {
       this._range.start = this._range.end.clone();
-    } else if (this._range.end.isBefore(this._range.start)) {
+    } else if (this._range.end && this._range.end.isBefore(this._range.start)) {
       this._range.end = this._range.start.clone();
     }
 
@@ -210,6 +213,11 @@ class ObDateRangePickerController {
 
   togglePicker() {
     let disabled = angular.isDefined(this.disabled()) ? this.disabled() : false;
+    if(this.defaultEmpty() && angular.isUndefined(this.range.start)) {
+      this.range.start = this.Moment()
+      this.range.end = this.Moment()
+      this.render()
+    }
     if (!disabled && !this.isPickerVisible) {
       this.isPickerVisible = true;
       this.elemClickFlag = true;
@@ -223,6 +231,7 @@ class ObDateRangePickerController {
   }
 
   setRange(range = this._range) {
+    if(angular.isUndefined(this.range.start) && angular.isUndefined(this.range.end)) return;
     if (this.format()) {
       this.range.start = range.start.format(this.getFormat());
       this.range.end = range.end.format(this.getFormat());
@@ -265,6 +274,7 @@ class ObDateRangePickerController {
 
   markPredefined(start, end) {
     this.selectedRengeIndex = this.preRanges.findIndex((range) => {
+      if(this.defaultEmpty() && this.range.start == undefined) return false;
       return (start.isSame(range.start, 'day') && end.isSame(range.end, 'day'));
     });
   }
