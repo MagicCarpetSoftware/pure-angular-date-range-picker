@@ -134,7 +134,8 @@ describe('directive ob-date-range-picker', function () {
 
         $rootScope.$digest();
 
-        expect(picker.range.start).toBeUndefined();
+        expect(picker.range.start).toBe(null);
+        expect(picker.range.end).toBe(null);
         picker.togglePicker();
         $rootScope.$digest();
 

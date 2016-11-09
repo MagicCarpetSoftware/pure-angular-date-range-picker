@@ -151,6 +151,12 @@
         </div>
 
         <div class="config">
+          <div class="label">Default Empty?</div>
+          <span class="radio-label">True</span> <input type="radio" class="input" name="defaultEmpty" ng-model="range.defaultEmpty" ng-value="true" ng-change="range.render()">
+          <span class="radio-label">False</span> <input type="radio" class="input" name="defaultEmpty" ng-model="range.defaultEmpty" ng-value="false" ng-change="range.render()">
+        </div>
+
+        <div class="config">
           <div class="label">Toggle trigger</div>
             <button ng-click="range.dateRangeApi.togglePicker()">Toggle</button>
         </div>

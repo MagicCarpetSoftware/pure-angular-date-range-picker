@@ -28,9 +28,10 @@
         </div>
       </div>
 
-      <div class="actions" ng-if="!obDateRangePicker.autoApply()">
-        <div class="drp_btn cancel" ng-click="obDateRangePicker.discardChanges()">Cancel</div>
-        <div class="drp_btn apply" ng-click="obDateRangePicker.applyChanges()">APPLY</div>
+      <div class="actions">
+        <div class="drp_btn cancel" ng-click="obDateRangePicker.discardChanges()" ng-if="!obDateRangePicker.autoApply()">Cancel</div>
+        <div class="drp_btn clear" ng-click="obDateRangePicker.clearChanges()" ng-if="obDateRangePicker.defaultEmpty()">Clear</div>
+        <div class="drp_btn apply" ng-click="obDateRangePicker.applyChanges()" ng-if="!obDateRangePicker.autoApply()">APPLY</div>
       </div>
     </div>
   </div>
