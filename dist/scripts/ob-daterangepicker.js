@@ -1,5 +1,1720 @@
-/******/!function(e){function t(n){if(a[n])return a[n].exports;var i=a[n]={exports:{},id:n,loaded:!1};return e[n].call(i.exports,i,i.exports,t),i.loaded=!0,i.exports}// webpackBootstrap
-/******/
-var a={};return t.m=e,t.c=a,t.p="",t(0)}([function(e,t,a){a(1),e.exports=a(8)},function(e,t,a){"use strict";var n=a(2),i=a(3),r=a(4),s=a(5),o=a(6),c=a(7);angular.module("obDateRangePicker",[]).constant("moment",moment).directive("dateRangePicker",n.DateRangePicker).directive("obDaterangepicker",r.ObDateRangePicker).directive("calendar",i.Calendar).directive("yearPicker",o.YearPicker).directive("monthPicker",c.MonthPicker).directive("obDaypicker",s.ObDayPicker)},function(e,t){"use strict";function a(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function n(){"ngInject";var e={restrict:"E",scope:{weekStart:"&",range:"=?",minDay:"&",maxDay:"&",api:"&",monthFormat:"&",inputFormat:"&",weekDaysName:"&",linkedCalendars:"&",interceptors:"&"},templateUrl:"app/directives/date-range-picker/date-range-picker.html",controller:s,controllerAs:"picker",bindToController:!0};return e}Object.defineProperty(t,"__esModule",{value:!0});var i=function(){function e(e,t){for(var a=0;a<t.length;a++){var n=t[a];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}return function(t,a,n){return a&&e(t.prototype,a),n&&e(t,n),t}}(),r=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var a=arguments[t];for(var n in a)Object.prototype.hasOwnProperty.call(a,n)&&(e[n]=a[n])}return e};t.DateRangePicker=n;var s=function(){function e(t,n){"ngInject";a(this,e),this.Moment=t,this.Scope=n,this.range=this.range||{},this.setConfigurations(),this.startCalendarApi={},this.endCalendarApi={},this.setInterceptors(),this.setListeners(),this.setApi(),this.watchRangeChange(),this.interceptors=this.interceptors()||{}}return e.$inject=["moment","$scope"],i(e,[{key:"setApi",value:function(){var e=this,t=this.api()||{};r(t,{setCalendarPosition:function(t,a){e.startCalendar=t,e.linkedCalendars()||t.isSame(a,"M")?e.endCalendar=e.startCalendar.clone().add(1,"M"):e.endCalendar=a},render:function(){e.startCalendarApi.render(),e.endCalendarApi.render()}})}},{key:"setListeners",value:function(){var e=this;this.Scope.$watchGroup([function(){return e.range.start},function(){return e.range.end}],function(t){t[0]&&t[1]&&e.setConfigurations()})}},{key:"setConfigurations",value:function(){var e=void 0,t=void 0;this.isMomentRange(this.range)?(e=this.range.start,t=this.range.end):(e=this.Moment(this.range.start,this.getFormat()),t=this.Moment(this.range.end,this.getFormat())),t=t.diff(e)>=0?t:e.clone(),this.rangeStart=e,this.rangeEnd=t,this.daysSelected=2,this.updateRange()}},{key:"updateRange",value:function(){this.isMomentRange(this.range)?(this.range.start=this.rangeStart,this.range.end=this.rangeEnd):(this.range.start=this.rangeStart?this.rangeStart.format(this.getFormat()):null,this.range.end=this.rangeEnd?this.rangeEnd.format(this.getFormat()):null)}},{key:"setInterceptors",value:function(){var e=this;this.startCalendarInterceptors={moveToPrevClicked:function(){e.moveCalenders(-1,"start")},moveToNextClicked:function(){e.moveCalenders(1,"start")},daySelected:function(t){e.dayInStartSelected(t),e.daySelected(t),2==e.daysSelected&&e.interceptors.rangeSelectedByClick&&e.interceptors.rangeSelectedByClick()},inputSelected:function(t){e.inputInStartSelected(t)}},this.endCalendarInterceptors={moveToPrevClicked:function(){e.moveCalenders(-1,"end")},moveToNextClicked:function(){e.moveCalenders(1,"end")},daySelected:function(t){e.dayInEndSelected(t),e.daySelected(t),2==e.daysSelected&&e.interceptors.rangeSelectedByClick&&e.interceptors.rangeSelectedByClick()},inputSelected:function(t){e.inputInEndSelected(t)}}}},{key:"inputInStartSelected",value:function(e){switch(this.daysSelected){case 0:case 1:this.rangeStart=e,this.daysSelected=1;break;case 2:e.diff(this.rangeStart,"days")<0?this.rangeStart=e:e.isBetween(this.rangeStart,this.rangeEnd)?this.rangeStart=e:e.diff(this.rangeEnd,"days")>=0&&(this.rangeStart=e,this.rangeEnd=e),this.daysSelected=2,this.updateRange()}}},{key:"inputInEndSelected",value:function(e){switch(this.daysSelected){case 0:this.rangeStart=e,this.daysSelected=1;break;case 1:case 2:e.diff(this.rangeStart,"days")<=0?(this.rangeStart=e,this.rangeEnd=e):e.isSame(this.startCalendar,"months")||e.isSame(this.endCalendar,"months")?this.rangeEnd=e:e.isSame(this.endCalendar,"months")||(this.rangeEnd=e),this.daysSelected=2,this.updateRange()}}},{key:"dayInStartSelected",value:function(e){var t=this.startCalendar.clone().add(1,"M");e.isSame(t,"month")&&this.dayInEndSelected(e)}},{key:"dayInEndSelected",value:function(e){var t=this.endCalendar.clone().subtract(1,"M");e.isSame(t,"month")&&this.dayInStartSelected(e)}},{key:"daySelected",value:function(e){switch(this.daysSelected){case 0:this.rangeStart=e,this.daysSelected=1;break;case 1:e.diff(this.rangeStart,"days")<0?this.rangeStart=e:(this.rangeEnd=e,this.daysSelected=2,this.updateRange());break;case 2:this.daysSelected=1,this.rangeStart=e,this.rangeEnd=null}}},{key:"moveCalenders",value:function(e,t){this.areCalendarsLinked()?(this.startCalendar=this.startCalendar.clone().add(e,"M"),this.endCalendar=this.endCalendar.clone().add(e,"M")):"start"===t?this.startCalendar=this.startCalendar.clone().add(e,"M"):this.endCalendar=this.endCalendar.clone().add(e,"M")}},{key:"isMomentRange",value:function(e){var t=!1;return e&&e.start&&e.end&&(t=this.Moment.isMoment(this.range.start)&&this.Moment.isMoment(this.range.end)),t}},{key:"watchRangeChange",value:function(){var e=this;this.Scope.$watchGroup([function(){return e.rangeStart},function(){return e.rangeEnd}],function(t,a){var n=t[0],i=t[1],r=a[0],s=a[1];e.maxDay()&&n.isSame(e.maxDay(),"M")&&(n=n.clone().subtract(1,"M")),e.startCalendar||e.endCalendar||(e.startCalendar=n,e.endCalendar=n.clone().add(1,"M")),e.areCalendarsLinked()?n.isSame(e.startCalendar,"M")||n.isSame(e.endCalendar,"M")?i&&i.isAfter(e.endCalendar,"M")?(e.startCalendar=i,e.endCalendar=i.clone().add(1,"M")):n.isSame(e.endCalendar,"M")||(e.startCalendar=n,e.endCalendar=n.clone().add(1,"M")):n.isSame(r,"M")&&i&&!i.isSame(s,"M")?(e.startCalendar=i.clone().subtract(1,"M"),e.endCalendar=i):(e.startCalendar=n,e.endCalendar=n.clone().add(1,"M")):n.isSame(e.startCalendar,"M")||n.isSame(e.endCalendar,"M")?i&&i.isAfter(e.endCalendar,"M")&&(e.endCalendar=i):n.isBefore(e.startCalendar,"M")?(e.startCalendar=n,i&&!i.isSame(e.endCalendar,"M")&&(n.isSame(i,"M")?e.endCalendar=n.clone().add(1,"M"):e.endCalendar=i)):n.isAfter(e.endCalendar)&&(e.startCalendar=n,e.endCalendar=n.clone().add(1,"M"))})}},{key:"areCalendarsLinked",value:function(){return angular.isDefined(this.linkedCalendars())?this.linkedCalendars():!0}}]),e}()},function(e,t){"use strict";function a(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function n(){"ngInject";var e={restrict:"E",scope:{minDay:"&",maxDay:"&",weekStart:"&",getMonth:"&month",getInterceptors:"&interceptors",rangeStart:"&",rangeEnd:"&",changeYear:"=",selectedDay:"&",minMonth:"&",maxMonth:"&",weekDaysName:"&",monthFormat:"&",inputFormat:"&",showInput:"&",api:"=?"},templateUrl:"app/directives/calendar/calendar.html",controller:s,controllerAs:"month",bindToController:!0};return e}Object.defineProperty(t,"__esModule",{value:!0});var i=function(){function e(e,t){for(var a=0;a<t.length;a++){var n=t[a];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}return function(t,a,n){return a&&e(t.prototype,a),n&&e(t,n),t}}(),r=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var a=arguments[t];for(var n in a)Object.prototype.hasOwnProperty.call(a,n)&&(e[n]=a[n])}return e};t.Calendar=n;var s=function(){function e(t,n,i){"ngInject";a(this,e),this.Moment=t,this.Scope=n,this.Attrs=i,this.api&&this.setApi(),this.selectedYear=this.selectedDay().year(),this.selectedMonth=this.selectedDay().month(),this.render()}return e.$inject=["moment","$scope","$attrs"],i(e,[{key:"setApi",value:function(){r(this.api,{render:this.render.bind(this),moveToNext:this.moveToNext.bind(this),showLeftArrow:this.showLeftArrow.bind(this)})}},{key:"render",value:function(){this.defaultWeekDaysNames=this.weekDaysName()||["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],this.firstDayOfWeek=this.weekStart()||"su",this.daysOfWeek=this.buildWeek(this.firstDayOfWeek),this.calendar=this.buildCalendar(this.getMonth()),this.interceptors=this.getInterceptors()||{},this.setListeners(),this.daysName=this.setWeekDaysNames(this.daysOfWeek)}},{key:"setValue",value:function(){this.selectedDay()&&(this.value=this.selectedDay().format(this.getInputFormat()))}},{key:"setWeekDaysNames",value:function(e){var t=arguments.length<=1||void 0===arguments[1]?this.defaultWeekDaysNames:arguments[1],a=[],n=this.Moment.weekdaysMin().reduce(function(e,t,a){return e[t.toLowerCase()]=a,e},{});return e.forEach(function(e,i){var r=n[e];a[i]=t[r]}),a}},{key:"setListeners",value:function(){var e=this;this.Scope.$watch(function(){return e.getMonth()},function(t){e.calendar=e.buildCalendar(t)}),this.Scope.$watchGroup([function(){return e.rangeStart()},function(){return e.rangeEnd()}],function(){e.setValue(),e.updateDaysProperties(e.calendar.monthWeeks)})}},{key:"monthChanged",value:function(e){var t=this.calendar.currentCalendar;this.month=t.clone().month(e),this.calendar=this.buildCalendar(this.month.clone())}},{key:"yearChanged",value:function(e){var t=this.calendar.currentCalendar;this.month=t.clone().year(e),this.calendar=this.buildCalendar(this.month.clone())}},{key:"updateDaysProperties",value:function(e){var t=this,a=this.minDay(),n=this.maxDay(),i=this.selectedDay(),r=this.rangeStart(),s=this.rangeEnd();e.forEach(function(e){e.forEach(function(e){e.selected=e.mo.isSame(i||null,"day"),e.inRange=t.isInRange(e.mo),e.rangeStart=e.mo.isSame(r||null,"day"),e.rangeEnd=e.mo.isSame(s||null,"day"),a&&(e.disabled=e.mo.isBefore(a,"day")),n&&!e.disabled&&(e.disabled=e.mo.isAfter(n,"day"))})})}},{key:"buildWeek",value:function(e){var t=this.Moment.weekdaysMin().map(function(e){return e.toLowerCase()}),a=t.indexOf(e.toLowerCase()),n=t.slice(0,a),i=t.slice(a,t.length),r=i.concat(n);return r}},{key:"buildCalendar",value:function(){for(var e=arguments.length<=0||void 0===arguments[0]?this.Moment():arguments[0],t=[[],[],[],[],[],[]],a=this.getMonthDateRange(e.year(),e.month()+1),n=a.start,i=this.daysOfWeek.indexOf(n.format("dd").toLowerCase()),r=n.clone().subtract(i,"d"),s=0;6>s;s++)for(var o=0;7>o;o++)t[s][o]={mo:r,currentDay:r.isSame(this.Moment(),"day"),currentMonth:r.isSame(e,"month")},r=r.clone().add(1,"d");return this.selectedMonth=e.month(),this.selectedYear=e.year(),this.updateDaysProperties(t),{currentCalendar:e,selectedDate:e,firstDayOfMonth:a.start.format("D"),lastDayOfMonth:a.end.format("D"),monthWeeks:t}}},{key:"moveCalenderByMonth",value:function(e){var t=this.calendar.currentCalendar;this.month=t.clone().add(e,"M"),this.calendar=this.buildCalendar(this.month.clone())}},{key:"moveToNext",value:function(){this.interceptors.moveToNextClicked?this.interceptors.moveToNextClicked.call(this.interceptors.context):this.moveCalenderByMonth(1)}},{key:"moveToPrev",value:function(){this.interceptors.moveToPrevClicked?this.interceptors.moveToPrevClicked.call(this.interceptors.context):this.moveCalenderByMonth(-1)}},{key:"getMonthDateRange",value:function(e,t){var a=this.Moment([e,t-1]),n=this.Moment(a).endOf("month");return{start:a,end:n}}},{key:"isInRange",value:function(e){var t=!1,a=this.rangeStart()||null,n=this.rangeEnd()||null;return t=e.isBetween(a,n)||e.isSame(a,"day")||t||e.isSame(n,"day")}},{key:"daySelected",value:function(e){e.disabled||this.interceptors.daySelected&&this.interceptors.daySelected.call(this.interceptors.context,e.mo)}},{key:"dateInputEntered",value:function(e,t){13==e.keyCode&&(this.dateInputSelected(e,t),e.preventDefault())}},{key:"dateInputSelected",value:function(e,t){var a=this.Moment(t,this.getInputFormat(),!0);if(a.isValid()){var n=this.minDay(),i=this.maxDay();a=n&&a.isBefore(n,"day")?n:a,a=i&&a.isAfter(i,"day")?i:a,this.selectedDay()&&this.selectedDay().isSame(a,"day")||(this.interceptors.inputSelected?this.interceptors.inputSelected(a):this.daySelected({mo:a}))}}},{key:"getFormattedMonth",value:function(e){return this.Moment(e).format(this.getMonthFormat())}},{key:"getMonthFormat",value:function(){return this.monthFormat()||"MMMM YYYY"}},{key:"getInputFormat",value:function(){return this.inputFormat()||"MMM DD, YYYY"}},{key:"showLeftArrow",value:function(){return this.minMonth()?!this.minMonth().isSame(this.calendar.currentCalendar.clone().subtract(1,"M"),"M"):this.minDay()?!this.minDay().isSame(this.calendar.currentCalendar,"M"):!0}},{key:"showRightArrow",value:function(){return this.maxMonth()?!this.maxMonth().isSame(this.getMonth().clone().add(1,"M"),"M"):this.maxDay()?!this.maxDay().isSame(this.getMonth(),"M"):!0}},{key:"_showInput",value:function(){return angular.isDefined(this.showInput())?this.showInput():!0}}]),e}()},function(e,t){"use strict";function a(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function n(){"ngInject";var e={restrict:"E",scope:{weekStart:"&",range:"=?",weekDaysName:"&",format:"&",ranges:"&",minDay:"&",maxDay:"&",defaultEmpty:"&",monthFormat:"&",inputFormat:"&",onApply:"&",linkedCalendars:"&",autoApply:"&",disabled:"&",calendarsAlwaysOn:"&",api:"=?"},controller:o,templateUrl:"app/directives/ob-date-range-picker/ob-date-range-picker.html",controllerAs:"obDateRangePicker",bindToController:!0};return e}Object.defineProperty(t,"__esModule",{value:!0});var i=function(){function e(e,t){var a=[],n=!0,i=!1,r=void 0;try{for(var s,o=e[Symbol.iterator]();!(n=(s=o.next()).done)&&(a.push(s.value),!t||a.length!==t);n=!0);}catch(c){i=!0,r=c}finally{try{!n&&o["return"]&&o["return"]()}finally{if(i)throw r}}return a}return function(t,a){if(Array.isArray(t))return t;if(Symbol.iterator in Object(t))return e(t,a);throw new TypeError("Invalid attempt to destructure non-iterable instance")}}(),r=function(){function e(e,t){for(var a=0;a<t.length;a++){var n=t[a];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}return function(t,a,n){return a&&e(t.prototype,a),n&&e(t,n),t}}(),s=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var a=arguments[t];for(var n in a)Object.prototype.hasOwnProperty.call(a,n)&&(e[n]=a[n])}return e};t.ObDateRangePicker=n;var o=function(){function e(t,n,i,r){"ngInject";var o=this;a(this,e),this.Element=n,this.Document=t,this.Scope=i,this.Moment=r,this.range=this.range||{},this.pickerApi={},this.isCustomVisible=this.calendarsAlwaysOn(),this.setOpenCloseLogic(),this.setWatchers(),this.value="Select a Range",this.api&&s(this.api,{setDateRange:this.setDateRange.bind(this),togglePicker:this.togglePicker.bind(this),render:function(){o.render(),o.pickerApi.render()}}),this.preRanges=this.ranges()||[],this.preRanges.length?this.preRanges.push({name:"Custom",isCustom:!0}):this.isCustomVisible=!0,this.render(),this.setListeners()}return e.$inject=["$document","$element","$scope","moment"],r(e,[{key:"render",value:function(){if(this.setPredefinedStatus(),(null==this.range.start||null==this.range.end)&&(this.range.start=null,this.range.end=null,this._range={start:this.Moment(),end:this.Moment()}),this.range.start&&this.range.end&&!this.Moment.isMoment(this.range.start)&&!this.Moment.isMoment(this.range.end)&&this.format())this._range={start:this.Moment(this.range.start,this.getFormat()),end:this.Moment(this.range.end,this.getFormat())};else if(this.Moment.isMoment(this.range.start)&&this.Moment.isMoment(this.range.end))this._range={start:this.range.start,end:this.range.end};else if(this.preRanges.length>1&&angular.isUndefined(this._range)){var e=this.preRanges[0];this._range.start=e.start,this._range.end=e.end}this._range.start&&this._range.start.isAfter(this._range.end)?this._range.start=this._range.end.clone():this._range.end&&this._range.end.isBefore(this._range.start)&&(this._range.end=this._range.start.clone()),this.applyMinMaxDaysToRange(),this.defaultEmpty()||this.setRange(),this.value=this.getRangeValue(),this.markPredefined(this._range.start,this._range.end),this.setPickerInterceptors()}},{key:"applyMinMaxDaysToRange",value:function(){if(this.minDay()){var e=this._getMinDay();this._range.start=this._range.start.isBefore(e,"d")?e:this._range.start,this._range.end=this._range.end.isBefore(e,"d")?e:this._range.end}if(this.maxDay()){var t=this._getMaxDay();this._range.start=this._range.start.isAfter(t)?t:this._range.start,this._range.end=this._range.end.isAfter(t)?t:this._range.end}}},{key:"setPickerInterceptors",value:function(){var e=this;this.pickerInterceptors={rangeSelectedByClick:function(){e.autoApply()&&e.applyChanges()}}}},{key:"setPredefinedStatus",value:function(){var e=this;this.preRanges.forEach(function(t){if(!t.isCustom){if(t.disabled=!1,e.minDay()){var a=e._getMinDay();t.disabled=t.start.isBefore(a,"d")}if(!t.disabled&&e.maxDay()){var n=e._getMaxDay();t.disabled=t.end.isAfter(n,"d")}}})}},{key:"setWatchers",value:function(){var e=this;this.Scope.$watchGroup([function(){return e._range.start},function(){return e._range.end}],function(t){var a=i(t,2),n=a[0],r=a[1];e.selfChange||n&&r&&(e.preRanges.length&&(e.preRanges[e.preRanges.length-1].start=n,e.preRanges[e.preRanges.length-1].end=r,e.markPredefined(n,r)),e.value=e.getRangeValue()),e.selfChange=!1})}},{key:"setOpenCloseLogic",value:function(){this.isPickerVisible=!1,this.pickerPopup=angular.element(this.Element[0].querySelector(".picker")),this.elemClickFlag=!1}},{key:"setListeners",value:function(){var e=this,t={documentClick:function(){e.elemClickFlag?e.elemClickFlag=!1:(e.isPickerVisible&&e.discardChanges(),e.Scope.$apply())},documentEsc:function(t){27==t.keyCode&&e.isPickerVisible&&(e.discardChanges(),e.hidePicker(),e.Scope.$apply())},pickerClick:function(){e.elemClickFlag=!0,e.Scope.$apply()}};this.pickerPopup.on("click",t.pickerClick.bind(this)),this.Document.on("click",t.documentClick.bind(this)),this.Document.on("keydown",t.documentEsc.bind(this)),this.Scope.$on("$destroy",function(){e.pickerPopup.off("click",t.pickerClick),e.Document.off("click",t.documentClick),e.Document.off("keydown",t.documentClick)})}},{key:"togglePicker",value:function(){var e=angular.isDefined(this.disabled())?this.disabled():!1;e||this.isPickerVisible?this.isPickerVisible=!1:(this.isPickerVisible=!0,this.elemClickFlag=!0)}},{key:"hidePicker",value:function(){this.isPickerVisible=!1}},{key:"setRange",value:function(){var e=arguments.length<=0||void 0===arguments[0]?this._range:arguments[0];this.format()?(this.range.start=e.start.format(this.getFormat()),this.range.end=e.end.format(this.getFormat())):(this.range.start=e.start,this.range.end=e.end)}},{key:"predefinedRangeSelected",value:function(e,t){e.disabled||(e.isCustom?this.isCustomVisible=!0:(this.selfChange=!0,this.selectedRengeIndex=t,this.value=e.name,this._range.start=e.start,this._range.end=e.end,this.isCustomVisible=this.calendarsAlwaysOn()||!1,this.applyChanges()))}},{key:"getFormat",value:function(){return this.format()||"MM-DD-YYYY"}},{key:"discardChanges",value:function(){var e=this.getFormat(),t=void 0,a=void 0;null!=this.range.start?(t=this.Moment(this.range.start,e),a=this.Moment(this.range.end,e)):(t=this.Moment(),a=this.Moment()),this._range.start=t,this._range.end=a,this.value=this.getRangeValue(),this.pickerApi.setCalendarPosition(t,a),this.hidePicker()}},{key:"clearChanges",value:function(){this._range.start=this.Moment(),this.range.start=null,this._range.end=this.Moment(),this.range.end=null,this.value=this.getRangeValue(),this.hidePicker()}},{key:"markPredefined",value:function(e,t){var a=this;this.selectedRengeIndex=this.preRanges.findIndex(function(n){return a.defaultEmpty()&&void 0==a.range.start?!1:e.isSame(n.start,"day")&&t.isSame(n.end,"day")})}},{key:"getRangeValue",value:function(){if(null==this.range.start)return"Select a Range";var e=void 0,t=this.getFormat(),a=this.Moment(this.range.start,t),n=this.Moment(this.range.end,t);if(this.preRanges.length){var i=this.preRanges.findIndex(function(e){return a.isSame(e.start,"day")&&n.isSame(e.end,"day")});e=-1!==i?this.preRanges[i].isCustom?this.preRanges[i].start.format(t)+" - "+this.preRanges[i].end.format(t):this.preRanges[i].name:a.format(t)+" - "+n.format(t)}else e=a.format(t)+" - "+n.format(t);return e}},{key:"applyChanges",value:function(){var e=arguments.length<=0||void 0===arguments[0]?!0:arguments[0];this.setRange(),this.hidePicker(),this.value=this.getRangeValue(),this.pickerApi.setCalendarPosition(this._range.start,this._range.end),e&&this.onApply&&this.onApply({start:this._range.start,end:this._range.end})}},{key:"getInputFormat",value:function(){return this.inputFormat()||"MMM DD, YYYY"}},{key:"setDateRange",value:function(e){this._range.start=e.start,this._range.end=e.end,this.applyChanges(!1)}},{key:"_getMinDay",value:function(){return this.minDay()?this.Moment(this.minDay(),this.getFormat()):void 0}},{key:"_getMaxDay",value:function(){return this.maxDay()?this.Moment(this.maxDay(),this.getFormat()):void 0}}]),e}()},function(e,t){"use strict";function a(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function n(){"ngInject";var e={restrict:"E",scope:{weekStart:"&",selectedDay:"=?",weekDaysName:"&",format:"&",minDay:"&",maxDay:"&",monthFormat:"&",displayFormat:"&",changeYear:"=",onApply:"&",disabled:"&",formName:"@name",isValidDateEnabled:"&validDay",autoApply:"&",api:"=?"},controller:s,templateUrl:"app/directives/ob-day-picker/ob-day-picker.html",controllerAs:"dayPicker",bindToController:!0};return e}Object.defineProperty(t,"__esModule",{value:!0});var i=function(){function e(e,t){for(var a=0;a<t.length;a++){var n=t[a];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}return function(t,a,n){return a&&e(t.prototype,a),n&&e(t,n),t}}(),r=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var a=arguments[t];for(var n in a)Object.prototype.hasOwnProperty.call(a,n)&&(e[n]=a[n])}return e};t.ObDayPicker=n;var s=function(){function e(t,n,i,s,o){"ngInject";var c=this;a(this,e),this.Element=n,this.Document=t,this.Scope=i,this.$timeout=s,this.Moment=o,this.formName=this.formName||"dayPickerInput",this.setOpenCloseLogic(),this._selectedDay=this.getSelectedDay(),this.value=this.Moment(this._selectedDay).format(this.getDisplayFormat()),this.setCalendarInterceptors(),this.calendarApi={},this.api&&r(this.api,{render:function(){c.render()}}),this.setListeners(),this.dayValidity=this.checkIfDayIsValid(this._selectedDay),this.$timeout(function(){c.applyValidity(c.dayValidity)})}return e.$inject=["$document","$element","$scope","$timeout","moment"],i(e,[{key:"render",value:function(){this.dayValidity=this.checkIfDayIsValid(this._selectedDay),this.applyValidity(this.dayValidity),this.calendarApi.render&&this.calendarApi.render()}},{key:"setOpenCloseLogic",value:function(){this.isPickerVisible=!1,this.pickerPopup=angular.element(this.Element[0].querySelector(".picker")),this.elemClickFlag=!1}},{key:"setCalendarInterceptors",value:function(){this.calendarInterceptors={daySelected:this.daySelected.bind(this)}}},{key:"setListeners",value:function(){var e=this,t={documentClick:function(){e.elemClickFlag?e.elemClickFlag=!1:(e.onBlur(),e.Scope.$digest())},pickerClick:function(){e.elemClickFlag=!0,e.Scope.$digest()}};this.pickerPopup.on("click",t.pickerClick.bind(this)),this.Document.on("click",t.documentClick.bind(this)),this.Scope.$on("$destroy",function(){e.pickerPopup.off("click",t.pickerClick),e.Document.off("click",t.documentClick)}),this.Scope.$watchGroup([function(){return e.Moment(e.minDay(),e.getFormat()).format()},function(){return e.Moment(e.maxDay(),e.getFormat()).format()}],function(t,a){(t&&t[0]||a&&a[0])&&e.render()})}},{key:"showPicker",value:function(){var e=angular.isDefined(this.disabled())?this.disabled():!1;e||this.isPickerVisible||(this.isPickerVisible=!0),this.elemClickFlag=!0}},{key:"hidePicker",value:function(){this.isPickerVisible=!1}},{key:"daySelected",value:function(e){var t=this,a=arguments.length<=1||void 0===arguments[1]?100:arguments[1];this.applyValidity(this.checkIfDayIsValid(e)),e.isSame(this._selectedDay,"day")?this.hidePicker():(this.calendarApi.render(),this.value=this.Moment(e).format(this.getDisplayFormat()),this._selectedDay=e,this.$timeout(function(){t.hidePicker(),t.updateSelectedDate(e)},a))}},{key:"dateInputEntered",value:function(e,t){var a=this.checkIfDayIsValid(t);switch(e.keyCode){case 9:case 13:var n=this.getInputValue();a?this.daySelected(n,0):(this.hidePicker(),13===e.keyCode&&e.preventDefault());break;case 40:this.isPickerVisible=!0;break;case 27:this.isPickerVisible=!1,this.value=this._selectedDay.format(this.getDisplayFormat())}}},{key:"getInputValue",value:function(){return this.Moment(this.value,this.getDisplayFormat(),!0)}},{key:"onBlur",value:function(){var e=this.getInputValue(),t=this.checkIfDayIsValid(e);t?this.daySelected(e):this.hidePicker()}},{key:"updateValidity",value:function(){var e=this.getInputValue(),t=this.checkIfDayIsValid(e);this.applyValidity(t),t&&this.autoApply()&&!e.isSame(this._selectedDay,"day")&&(this._selectedDay=e,this.updateSelectedDate(e))}},{key:"checkIfDayIsValid",value:function(e){var t=this.Moment(e,this.getDisplayFormat(),!0),a=this._getMinDay(),n=this._getMaxDay(),i=t.isValid();return i&&a&&(i=t.isAfter(a,"day")||t.isSame(a,"day")),i&&n&&(i=t.isBefore(n,"day")||t.isSame(n,"day")),i}},{key:"applyValidity",value:function(e){this.Scope[this.formName]&&(this.disabled&&this.disabled()?(this.Scope[this.formName].$setValidity("validDay",!0),this.dayValidity=!0):this.isValidDateEnabled()&&this.Scope[this.formName]&&(this.Scope[this.formName].$setValidity("validDay",e),this.dayValidity=e))}},{key:"updateSelectedDate",value:function(){var e=arguments.length<=0||void 0===arguments[0]?this._selectedDay:arguments[0];this.format()?this.selectedDay=e.format(this.getFormat()):this.selectedDay=e,this.onApply({day:this.selectedDay})}},{key:"getSelectedDay",value:function(){return this.Moment(this.selectedDay||this.Moment(),this.getFormat())}},{key:"getDisplayFormat",value:function(){return this.displayFormat()||this.getFormat()}},{key:"getFormat",value:function(){return this.format()||"MMM DD, YYYY"}},{key:"_getMinDay",value:function(){return this.minDay()?this.Moment(this.minDay(),this.getFormat()):void 0}},{key:"_getMaxDay",value:function(){return this.maxDay()?this.Moment(this.maxDay(),this.getFormat()):void 0}}]),e}()},function(e,t){"use strict";function a(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function n(){"ngInject";var e={restrict:"E",scope:{yearChanged:"&?",selectedYear:"=",minYear:"&",maxYear:"&"},controller:r,templateUrl:"app/directives/year-picker/year-picker.html",controllerAs:"yearPicker",bindToController:!0};return e}Object.defineProperty(t,"__esModule",{value:!0});var i=function(){function e(e,t){for(var a=0;a<t.length;a++){var n=t[a];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}return function(t,a,n){return a&&e(t.prototype,a),n&&e(t,n),t}}();t.YearPicker=n;var r=function(){function e(t){"ngInject";a(this,e),this.Moment=t,this.years=this.generateYears(),this.selectedYear=this.selectedYear||this.defaultYear()}return e.$inject=["moment"],i(e,[{key:"defaultYear",value:function(){for(var e=this.selectedYear||this.Moment().year(),t=0;t<=this.years.length;t++)if(this.years[t].value==e)return this.years[t].value;return this.years[0].value}},{key:"generateYears",value:function(){for(var e=[],t=this.endYear();t>=this.startYear();t--)e.push({value:t,label:t});return e}},{key:"startYear",value:function(){return this.minYear()?this.minYear():this.Moment().year()-80}},{key:"endYear",value:function(){return this.maxYear()?this.maxYear():this.Moment().year()+5}},{key:"onYearChange",value:function(){this.yearChanged({year:this.selectedYear})}}]),e}()},function(e,t){"use strict";function a(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function n(){"ngInject";var e={restrict:"E",scope:{selectedMonth:"=",monthChanged:"&?"},controller:r,templateUrl:"app/directives/month-picker/month-picker.html",controllerAs:"monthPicker",bindToController:!0};return e}Object.defineProperty(t,"__esModule",{value:!0});var i=function(){function e(e,t){for(var a=0;a<t.length;a++){var n=t[a];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}return function(t,a,n){return a&&e(t.prototype,a),n&&e(t,n),t}}();t.MonthPicker=n;var r=function(){function e(t){"ngInject";a(this,e),this.Moment=t,this.months=this.generateMonths(),this.month=this.defaultMonth()}return e.$inject=["moment"],i(e,[{key:"defaultMonth",value:function(){for(var e=this.selectedMonth||this.Moment().month(),t=0;t<=this.months.length;t++)if(this.months[t].value==e)return this.months[t].value}},{key:"generateMonths",value:function(){for(var e=[],t=0;11>=t;t++)e.push({value:t,label:this.Moment().month(t).format("MMMM")});return e}},{key:"onMonthChange",value:function(){this.monthChanged({newMonth:this.month.value})}}]),e}()},function(e,t){"use strict";Array.prototype.findIndex||(Array.prototype.findIndex=function(e){if(null===this)throw new TypeError("Array.prototype.findIndex called on null or undefined");if("function"!=typeof e)throw new TypeError("predicate must be a function");for(var t,a=Object(this),n=a.length>>>0,i=arguments[1],r=0;n>r;r++)if(t=a[r],e.call(i,t,r,a))return r;return-1})}]),angular.module("obDateRangePicker").run(["$templateCache",function(e){e.put("app/directives/calendar/calendar.html",'<div class="input-container" ng-if="month._showInput()"><label>{{month.Attrs.label}}</label> <input type="text" ng-model="month.value" ng-keypress="month.dateInputEntered($event, month.value)" ng-blur="month.dateInputSelected($event, month.value)"></div><div class="header"><span class="arrow-btn left" ng-if="month.showLeftArrow()" ng-click="month.moveToPrev()"></span> <span class="date"><span ng-if="month.changeYear"><month-picker month-changed="month.monthChanged(newMonth)" selected-month="month.selectedMonth"></month-picker></span> <span ng-if="month.changeYear"><year-picker year-changed="month.yearChanged(year)" selected-year="month.selectedYear"></year-picker></span> <span ng-if="!month.changeYear">{{month.getFormattedMonth(month.calendar.currentCalendar)}}</span></span> <span class="arrow-btn right" ng-if="month.showRightArrow()" ng-click="month.moveToNext(1)"></span></div><div class="board"><div class="days-of-week"><span class="day-name" ng-repeat="day in month.daysName track by $index">{{day}}</span></div><div class="weeks"><div ng-repeat="week in month.calendar.monthWeeks track by $index"><span class="day" ng-repeat="day in week track by $index" ng-class="{ \'selected\': day.selected, \'current\': day.currentDay, \'other-month\': !day.currentMonth, \'in-range\': day.inRange, \'range-start\': day.rangeStart, \'range-end\': day.rangeEnd, \'disabled\': day.disabled }" ng-click="month.daySelected(day)">{{day.mo.format(\'D\')}}</span></div></div></div>'),e.put("app/directives/date-range-picker/date-range-picker.html",'<calendar class="calendar" api="picker.startCalendarApi" min-day="picker.minDay()" max-day="picker.maxDay()" week-start="picker.weekStart()" month="picker.startCalendar" interceptors="picker.startCalendarInterceptors" range-start="picker.rangeStart" range-end="picker.rangeEnd" selected-day="picker.rangeStart" max-month="picker.endCalendar" week-days-name="picker.weekDaysName()" month-format="picker.monthFormat()" input-format="picker.inputFormat()" label="Start Date"></calendar><calendar class="calendar" api="picker.endCalendarApi" min-day="picker.minDay()" max-day="picker.maxDay()" week-start="picker.weekStart()" month="picker.endCalendar" interceptors="picker.endCalendarInterceptors" range-start="picker.rangeStart" range-end="picker.rangeEnd" selected-day="picker.rangeEnd" min-month="picker.startCalendar" week-days-name="picker.weekDaysName()" month-format="picker.monthFormat()" input-format="picker.inputFormat()" label="End Date"></calendar>'),
-e.put("app/directives/ob-date-range-picker/ob-date-range-picker.html",'<div class="picker-dropdown-container" ng-class="{\'disabled\': obDateRangePicker.disabled()}"><div class="picker-dropdown" ng-class="{\'open\': obDateRangePicker.isPickerVisible}" ng-click="obDateRangePicker.togglePicker()"><span>{{obDateRangePicker.value}}</span></div><div class="picker" ng-class="{\'open\': obDateRangePicker.isPickerVisible}" ng-show="obDateRangePicker.isPickerVisible"><div class="date-range" ng-show="obDateRangePicker.isCustomVisible"><date-range-picker ng-if="obDateRangePicker.isPickerVisible" api="obDateRangePicker.pickerApi" interceptors="obDateRangePicker.pickerInterceptors" linked-calendars="obDateRangePicker.linkedCalendars()" week-start="obDateRangePicker.weekStart()" range="obDateRangePicker._range" week-days-name="obDateRangePicker.weekDaysName()" min-day="obDateRangePicker._getMinDay()" max-day="obDateRangePicker._getMaxDay()" month-format="obDateRangePicker.monthFormat()" input-format="obDateRangePicker.inputFormat()"></date-range-picker></div><div class="ranges-actions" ng-class="{\'custom-open\': obDateRangePicker.isCustomVisible}"><div class="ranges"><div class="range" ng-repeat="range in obDateRangePicker.preRanges track by $index" ng-class="{\'selected\': obDateRangePicker.selectedRengeIndex === $index, \'disabled\': range.disabled}" ng-click="obDateRangePicker.predefinedRangeSelected(range, $index)" ng-if="!$last || ($last && !obDateRangePicker.calendarsAlwaysOn())">{{range.name}}</div></div><div class="actions"><div class="drp_btn cancel" ng-click="obDateRangePicker.discardChanges()" ng-if="!obDateRangePicker.autoApply()">Cancel</div><div class="drp_btn clear" ng-click="obDateRangePicker.clearChanges()" ng-if="obDateRangePicker.defaultEmpty()">Clear</div><div class="drp_btn apply" ng-click="obDateRangePicker.applyChanges()" ng-if="!obDateRangePicker.autoApply()">APPLY</div></div></div></div></div>'),e.put("app/directives/month-picker/month-picker.html",'<select ng-options="month.value as month.label for month in monthPicker.months" ng-model="monthPicker.selectedMonth" ng-change="monthPicker.onMonthChange()"></select>'),e.put("app/directives/ob-day-picker/ob-day-picker.html",'<div ng-form="{{::dayPicker.formName}}" class="picker-dropdown-container" ng-class="{\'open\': dayPicker.isPickerVisible, \'disabled\': dayPicker.disabled(), \'invalid\': !dayPicker.dayValidity}"><input class="picker-input" ng-model="dayPicker.value" ng-change="dayPicker.updateValidity()" ng-keydown="dayPicker.dateInputEntered($event, dayPicker.value)" ng-click="dayPicker.showPicker()" ng-disabled="dayPicker.disabled()"><div class="picker" ng-show="dayPicker.isPickerVisible"><calendar class="calendar" api="dayPicker.calendarApi" min-day="dayPicker._getMinDay()" max-day="dayPicker._getMaxDay()" week-start="dayPicker.weekStart()" change-year="dayPicker.changeYear" month="dayPicker._selectedDay" interceptors="dayPicker.calendarInterceptors" selected-day="dayPicker._selectedDay" min-month="dayPicker.startCalendar" week-days-name="dayPicker.weekDaysName()" month-format="dayPicker.monthFormat()" show-input="false"></calendar></div></div>'),e.put("app/directives/year-picker/year-picker.html",'<select ng-options="year.value as year.label for year in yearPicker.years" ng-model="yearPicker.selectedYear" ng-change="yearPicker.onYearChange()"></select>')}]);
-//# sourceMappingURL=../maps/scripts/ob-daterangepicker.js.map
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId])
+/******/ 			return installedModules[moduleId].exports;
+
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			exports: {},
+/******/ 			id: moduleId,
+/******/ 			loaded: false
+/******/ 		};
+
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+
+/******/ 		// Flag the module as loaded
+/******/ 		module.loaded = true;
+
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+
+
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(0);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__(1);
+	module.exports = __webpack_require__(8);
+
+
+/***/ },
+/* 1 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* global moment:false */
+
+	'use strict';
+
+	var _directivesDateRangePickerDateRangePickerDirective = __webpack_require__(2);
+
+	var _directivesCalendarCalendarDirective = __webpack_require__(3);
+
+	var _directivesObDateRangePickerObDateRangePickerDirectiveJs = __webpack_require__(4);
+
+	var _directivesObDayPickerObDayPickerDirective = __webpack_require__(5);
+
+	var _directivesYearPickerYearPickerDirective = __webpack_require__(6);
+
+	var _directivesMonthPickerMonthPickerDirective = __webpack_require__(7);
+
+	angular.module('obDateRangePicker', []).constant('moment', moment).directive('dateRangePicker', _directivesDateRangePickerDateRangePickerDirective.DateRangePicker).directive('obDaterangepicker', _directivesObDateRangePickerObDateRangePickerDirectiveJs.ObDateRangePicker).directive('calendar', _directivesCalendarCalendarDirective.Calendar).directive('yearPicker', _directivesYearPickerYearPickerDirective.YearPicker).directive('monthPicker', _directivesMonthPickerMonthPickerDirective.MonthPicker).directive('obDaypicker', _directivesObDayPickerObDayPickerDirective.ObDayPicker);
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	exports.DateRangePicker = DateRangePicker;
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function DateRangePicker() {
+	  'ngInject';
+
+	  var directive = {
+	    restrict: 'E',
+	    scope: {
+	      weekStart: '&',
+	      range: '=?',
+	      minDay: '&',
+	      maxDay: '&',
+	      api: '&',
+	      monthFormat: '&',
+	      inputFormat: '&',
+	      weekDaysName: '&',
+	      linkedCalendars: '&',
+	      interceptors: '&'
+	    },
+	    templateUrl: 'app/directives/date-range-picker/date-range-picker.html',
+	    controller: DateRangePickerController,
+	    controllerAs: 'picker',
+	    bindToController: true
+	  };
+
+	  return directive;
+	}
+
+	var DateRangePickerController = (function () {
+	  DateRangePickerController.$inject = ["moment", "$scope"];
+	  function DateRangePickerController(moment, $scope) {
+	    'ngInject';
+
+	    _classCallCheck(this, DateRangePickerController);
+
+	    this.Moment = moment;
+	    this.Scope = $scope;
+
+	    this.range = this.range || {};
+	    this.setConfigurations();
+	    this.startCalendarApi = {};
+	    this.endCalendarApi = {};
+	    this.setInterceptors();
+	    this.setListeners();
+	    this.setApi();
+	    this.watchRangeChange();
+	    this.interceptors = this.interceptors() || {};
+	  }
+
+	  _createClass(DateRangePickerController, [{
+	    key: 'setApi',
+	    value: function setApi() {
+	      var _this = this;
+
+	      var api = this.api() || {};
+	      _extends(api, {
+	        setCalendarPosition: function setCalendarPosition(start, end) {
+	          _this.startCalendar = start;
+	          if (_this.linkedCalendars() || start.isSame(end, 'M')) {
+	            _this.endCalendar = _this.startCalendar.clone().add(1, 'M');
+	          } else {
+	            _this.endCalendar = end;
+	          }
+	        },
+	        render: function render() {
+	          _this.startCalendarApi.render();
+	          _this.endCalendarApi.render();
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'setListeners',
+	    value: function setListeners() {
+	      var _this2 = this;
+
+	      this.Scope.$watchGroup([function () {
+	        return _this2.range.start;
+	      }, function () {
+	        return _this2.range.end;
+	      }], function (newRange) {
+	        if (newRange[0] && newRange[1]) {
+	          _this2.setConfigurations();
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'setConfigurations',
+	    value: function setConfigurations() {
+	      var start = undefined,
+	          end = undefined;
+	      if (this.isMomentRange(this.range)) {
+	        start = this.range.start;
+	        end = this.range.end;
+	      } else {
+	        start = this.Moment(this.range.start, this.getFormat());
+	        end = this.Moment(this.range.end, this.getFormat());
+	      }
+
+	      end = end.diff(start) >= 0 ? end : start.clone();
+	      this.rangeStart = start;
+	      this.rangeEnd = end;
+	      this.daysSelected = 2;
+	      this.updateRange();
+	    }
+	  }, {
+	    key: 'updateRange',
+	    value: function updateRange() {
+	      if (this.isMomentRange(this.range)) {
+	        this.range.start = this.rangeStart;
+	        this.range.end = this.rangeEnd;
+	      } else {
+	        this.range.start = this.rangeStart ? this.rangeStart.format(this.getFormat()) : null;
+	        this.range.end = this.rangeEnd ? this.rangeEnd.format(this.getFormat()) : null;
+	      }
+	    }
+	  }, {
+	    key: 'setInterceptors',
+	    value: function setInterceptors() {
+	      var _this3 = this;
+
+	      this.startCalendarInterceptors = {
+	        moveToPrevClicked: function moveToPrevClicked() {
+	          _this3.moveCalenders(-1, 'start');
+	        },
+	        moveToNextClicked: function moveToNextClicked() {
+	          _this3.moveCalenders(1, 'start');
+	        },
+	        daySelected: function daySelected(day) {
+	          _this3.dayInStartSelected(day);
+	          _this3.daySelected(day);
+	          if (_this3.daysSelected == 2) {
+	            _this3.interceptors.rangeSelectedByClick && _this3.interceptors.rangeSelectedByClick();
+	          }
+	        },
+	        inputSelected: function inputSelected(day) {
+	          _this3.inputInStartSelected(day);
+	        }
+	      };
+
+	      this.endCalendarInterceptors = {
+	        moveToPrevClicked: function moveToPrevClicked() {
+	          _this3.moveCalenders(-1, 'end');
+	        },
+	        moveToNextClicked: function moveToNextClicked() {
+	          _this3.moveCalenders(1, 'end');
+	        },
+	        daySelected: function daySelected(day) {
+	          _this3.dayInEndSelected(day);
+	          _this3.daySelected(day);
+	          if (_this3.daysSelected == 2) {
+	            _this3.interceptors.rangeSelectedByClick && _this3.interceptors.rangeSelectedByClick();
+	          }
+	        },
+	        inputSelected: function inputSelected(day) {
+	          _this3.inputInEndSelected(day);
+	        }
+	      };
+	    }
+	  }, {
+	    key: 'inputInStartSelected',
+	    value: function inputInStartSelected(day) {
+	      switch (this.daysSelected) {
+	        case 0:
+	        case 1:
+	          this.rangeStart = day;
+	          this.daysSelected = 1;
+	          break;
+	        case 2:
+	          if (day.diff(this.rangeStart, 'days') < 0) {
+	            this.rangeStart = day;
+	          } else if (day.isBetween(this.rangeStart, this.rangeEnd)) {
+	            this.rangeStart = day;
+	          } else if (day.diff(this.rangeEnd, 'days') >= 0) {
+	            this.rangeStart = day;
+	            this.rangeEnd = day;
+	          }
+	          this.daysSelected = 2;
+	          this.updateRange();
+	          break;
+	      }
+	    }
+	  }, {
+	    key: 'inputInEndSelected',
+	    value: function inputInEndSelected(day) {
+	      switch (this.daysSelected) {
+	        case 0:
+	          this.rangeStart = day;
+	          this.daysSelected = 1;
+	          break;
+	        case 1:
+	        case 2:
+	          if (day.diff(this.rangeStart, 'days') <= 0) {
+	            this.rangeStart = day;
+	            this.rangeEnd = day;
+	          } else if (day.isSame(this.startCalendar, 'months') || day.isSame(this.endCalendar, 'months')) {
+	            this.rangeEnd = day;
+	          } else if (!day.isSame(this.endCalendar, 'months')) {
+	            this.rangeEnd = day;
+	          }
+
+	          this.daysSelected = 2;
+	          this.updateRange();
+	          break;
+	      }
+	    }
+	  }, {
+	    key: 'dayInStartSelected',
+	    value: function dayInStartSelected(day) {
+	      var nextMonth = this.startCalendar.clone().add(1, 'M');
+
+	      if (day.isSame(nextMonth, 'month')) {
+	        this.dayInEndSelected(day);
+	      }
+	    }
+	  }, {
+	    key: 'dayInEndSelected',
+	    value: function dayInEndSelected(day) {
+	      var prevMonth = this.endCalendar.clone().subtract(1, 'M');
+
+	      if (day.isSame(prevMonth, 'month')) {
+	        this.dayInStartSelected(day);
+	      }
+	    }
+	  }, {
+	    key: 'daySelected',
+	    value: function daySelected(day) {
+	      switch (this.daysSelected) {
+	        case 0:
+	          this.rangeStart = day;
+	          this.daysSelected = 1;
+	          break;
+	        case 1:
+	          if (day.diff(this.rangeStart, 'days') < 0) {
+	            this.rangeStart = day;
+	          } else {
+	            this.rangeEnd = day;
+	            this.daysSelected = 2;
+	            this.updateRange();
+	          }
+	          break;
+	        case 2:
+	          this.daysSelected = 1;
+	          this.rangeStart = day;
+	          this.rangeEnd = null;
+	          break;
+	      }
+	    }
+	  }, {
+	    key: 'moveCalenders',
+	    value: function moveCalenders(month, calendar) {
+	      if (this.areCalendarsLinked()) {
+	        this.startCalendar = this.startCalendar.clone().add(month, 'M');
+	        this.endCalendar = this.endCalendar.clone().add(month, 'M');
+	      } else {
+	        if (calendar === 'start') {
+	          this.startCalendar = this.startCalendar.clone().add(month, 'M');
+	        } else {
+	          this.endCalendar = this.endCalendar.clone().add(month, 'M');
+	        }
+	      }
+	    }
+	  }, {
+	    key: 'isMomentRange',
+	    value: function isMomentRange(range) {
+	      var isRange = false;
+	      if (range && range.start && range.end) {
+	        isRange = this.Moment.isMoment(this.range.start) && this.Moment.isMoment(this.range.end);
+	      }
+
+	      return isRange;
+	    }
+	  }, {
+	    key: 'watchRangeChange',
+	    value: function watchRangeChange() {
+	      var _this4 = this;
+
+	      this.Scope.$watchGroup([function () {
+	        return _this4.rangeStart;
+	      }, function () {
+	        return _this4.rangeEnd;
+	      }], function (newRange, oldRange) {
+	        var newStart = newRange[0];
+	        var newEnd = newRange[1];
+	        var oldStart = oldRange[0];
+	        var oldEnd = oldRange[1];
+
+	        if (_this4.maxDay() && newStart.isSame(_this4.maxDay(), 'M')) {
+	          newStart = newStart.clone().subtract(1, 'M');
+	        }
+
+	        if (!_this4.startCalendar && !_this4.endCalendar) {
+	          _this4.startCalendar = newStart;
+	          _this4.endCalendar = newStart.clone().add(1, 'M');
+	        }
+
+	        if (_this4.areCalendarsLinked()) {
+	          if (!(newStart.isSame(_this4.startCalendar, 'M') || newStart.isSame(_this4.endCalendar, 'M'))) {
+	            if (newStart.isSame(oldStart, 'M') && newEnd && !newEnd.isSame(oldEnd, 'M')) {
+	              _this4.startCalendar = newEnd.clone().subtract(1, 'M');
+	              _this4.endCalendar = newEnd;
+	            } else {
+	              _this4.startCalendar = newStart;
+	              _this4.endCalendar = newStart.clone().add(1, 'M');
+	            }
+	          } else if (newEnd && newEnd.isAfter(_this4.endCalendar, 'M')) {
+	            _this4.startCalendar = newEnd;
+	            _this4.endCalendar = newEnd.clone().add(1, 'M');
+	          } else if (!newStart.isSame(_this4.endCalendar, 'M')) {
+	            _this4.startCalendar = newStart;
+	            _this4.endCalendar = newStart.clone().add(1, 'M');
+	          }
+	        } else {
+	          if (!(newStart.isSame(_this4.startCalendar, 'M') || newStart.isSame(_this4.endCalendar, 'M'))) {
+	            if (newStart.isBefore(_this4.startCalendar, 'M')) {
+	              _this4.startCalendar = newStart;
+
+	              if (newEnd && !newEnd.isSame(_this4.endCalendar, 'M')) {
+	                if (newStart.isSame(newEnd, 'M')) {
+	                  _this4.endCalendar = newStart.clone().add(1, "M");
+	                } else {
+	                  _this4.endCalendar = newEnd;
+	                }
+	              }
+	            } else if (newStart.isAfter(_this4.endCalendar)) {
+	              _this4.startCalendar = newStart;
+	              _this4.endCalendar = newStart.clone().add(1, 'M');
+	            }
+	          } else if (newEnd && newEnd.isAfter(_this4.endCalendar, 'M')) {
+	            _this4.endCalendar = newEnd;
+	          }
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'areCalendarsLinked',
+	    value: function areCalendarsLinked() {
+	      return angular.isDefined(this.linkedCalendars()) ? this.linkedCalendars() : true;
+	    }
+	  }]);
+
+	  return DateRangePickerController;
+	})();
+
+/***/ },
+/* 3 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	exports.Calendar = Calendar;
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function Calendar() {
+	  'ngInject';
+
+	  var directive = {
+	    restrict: 'E',
+	    scope: {
+	      minDay: '&',
+	      maxDay: '&',
+	      weekStart: '&',
+	      getMonth: '&month',
+	      getInterceptors: '&interceptors',
+	      rangeStart: '&',
+	      rangeEnd: '&',
+	      changeYear: '=',
+	      selectedDay: '&',
+	      minMonth: '&',
+	      maxMonth: '&',
+	      weekDaysName: '&',
+	      monthFormat: '&',
+	      inputFormat: '&',
+	      showInput: '&',
+	      api: '=?'
+	    },
+	    templateUrl: 'app/directives/calendar/calendar.html',
+	    controller: CalendarController,
+	    controllerAs: 'month',
+	    bindToController: true
+	  };
+
+	  return directive;
+	}
+
+	var CalendarController = (function () {
+	  CalendarController.$inject = ["moment", "$scope", "$attrs"];
+	  function CalendarController(moment, $scope, $attrs) {
+	    'ngInject';
+
+	    _classCallCheck(this, CalendarController);
+
+	    this.Moment = moment;
+	    this.Scope = $scope;
+	    this.Attrs = $attrs;
+	    this.api && this.setApi();
+	    this.selectedYear = this.selectedDay().year();
+	    this.selectedMonth = this.selectedDay().month();
+	    this.render();
+	  }
+
+	  _createClass(CalendarController, [{
+	    key: 'setApi',
+	    value: function setApi() {
+	      _extends(this.api, {
+	        render: this.render.bind(this),
+	        moveToNext: this.moveToNext.bind(this),
+	        showLeftArrow: this.showLeftArrow.bind(this)
+	      });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      this.defaultWeekDaysNames = this.weekDaysName() || ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+	      this.firstDayOfWeek = this.weekStart() || 'su';
+	      this.daysOfWeek = this.buildWeek(this.firstDayOfWeek);
+	      this.calendar = this.buildCalendar(this.getMonth());
+	      this.interceptors = this.getInterceptors() || {};
+	      this.setListeners();
+	      this.daysName = this.setWeekDaysNames(this.daysOfWeek);
+	    }
+	  }, {
+	    key: 'setValue',
+	    value: function setValue() {
+	      if (this.selectedDay()) {
+	        this.value = this.selectedDay().format(this.getInputFormat());
+	      }
+	    }
+	  }, {
+	    key: 'setWeekDaysNames',
+	    value: function setWeekDaysNames(weekDays) {
+	      var daysName = arguments.length <= 1 || arguments[1] === undefined ? this.defaultWeekDaysNames : arguments[1];
+
+	      var weekDayNames = [];
+	      var defPosMap = this.Moment.weekdaysMin().reduce(function (obj, day, index) {
+	        obj[day.toLowerCase()] = index;
+	        return obj;
+	      }, {});
+
+	      weekDays.forEach(function (day, index) {
+	        var defPos = defPosMap[day];
+	        weekDayNames[index] = daysName[defPos];
+	      });
+
+	      return weekDayNames;
+	    }
+	  }, {
+	    key: 'setListeners',
+	    value: function setListeners() {
+	      var _this = this;
+
+	      this.Scope.$watch(function () {
+	        return _this.getMonth();
+	      }, function (newMonth) {
+	        _this.calendar = _this.buildCalendar(newMonth);
+	      });
+
+	      this.Scope.$watchGroup([function () {
+	        return _this.rangeStart();
+	      }, function () {
+	        return _this.rangeEnd();
+	      }], function () {
+	        _this.setValue();
+	        _this.updateDaysProperties(_this.calendar.monthWeeks);
+	      });
+	    }
+	  }, {
+	    key: 'monthChanged',
+	    value: function monthChanged(month) {
+	      var mo = this.calendar.currentCalendar;
+	      this.month = mo.clone().month(month);
+	      this.calendar = this.buildCalendar(this.month.clone());
+	    }
+	  }, {
+	    key: 'yearChanged',
+	    value: function yearChanged(year) {
+	      var mo = this.calendar.currentCalendar;
+	      this.month = mo.clone().year(year);
+	      this.calendar = this.buildCalendar(this.month.clone());
+	    }
+	  }, {
+	    key: 'updateDaysProperties',
+	    value: function updateDaysProperties(monthWeeks) {
+	      var _this2 = this;
+
+	      var minDay = this.minDay();
+	      var maxDay = this.maxDay();
+	      var selectedDay = this.selectedDay();
+	      var rangeStart = this.rangeStart();
+	      var rangeEnd = this.rangeEnd();
+
+	      monthWeeks.forEach(function (week) {
+	        week.forEach(function (day) {
+	          day.selected = day.mo.isSame(selectedDay || null, 'day');
+	          day.inRange = _this2.isInRange(day.mo);
+	          day.rangeStart = day.mo.isSame(rangeStart || null, 'day');
+	          day.rangeEnd = day.mo.isSame(rangeEnd || null, 'day');
+	          if (minDay) {
+	            day.disabled = day.mo.isBefore(minDay, 'day');
+	          }
+	          if (maxDay && !day.disabled) {
+	            day.disabled = day.mo.isAfter(maxDay, 'day');
+	          }
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'buildWeek',
+	    value: function buildWeek(firstDay) {
+	      var daysOfWeek = this.Moment.weekdaysMin().map(function (day) {
+	        return day.toLowerCase();
+	      });
+	      var pivot = daysOfWeek.indexOf(firstDay.toLowerCase());
+	      var firstHalf = daysOfWeek.slice(0, pivot);
+	      var secondHalf = daysOfWeek.slice(pivot, daysOfWeek.length);
+	      var week = secondHalf.concat(firstHalf);
+
+	      return week;
+	    }
+	  }, {
+	    key: 'buildCalendar',
+	    value: function buildCalendar() {
+	      var date = arguments.length <= 0 || arguments[0] === undefined ? this.Moment() : arguments[0];
+
+	      var monthWeeks = [[], [], [], [], [], []];
+	      var monthRange = this.getMonthDateRange(date.year(), date.month() + 1);
+	      var firstDayOfMonth = monthRange.start;
+
+	      var pivot = this.daysOfWeek.indexOf(firstDayOfMonth.format('dd').toLowerCase());
+	      var tmpDate = firstDayOfMonth.clone().subtract(pivot, 'd');
+
+	      for (var i = 0; i < 6; i++) {
+	        for (var j = 0; j < 7; j++) {
+	          monthWeeks[i][j] = {
+	            mo: tmpDate,
+	            currentDay: tmpDate.isSame(this.Moment(), 'day'),
+	            currentMonth: tmpDate.isSame(date, 'month')
+	          };
+	          tmpDate = tmpDate.clone().add(1, 'd');
+	        }
+	      }
+	      this.selectedMonth = date.month();
+	      this.selectedYear = date.year();
+	      this.updateDaysProperties(monthWeeks);
+
+	      return {
+	        currentCalendar: date,
+	        selectedDate: date,
+	        firstDayOfMonth: monthRange.start.format('D'),
+	        lastDayOfMonth: monthRange.end.format('D'),
+	        monthWeeks: monthWeeks
+	      };
+	    }
+	  }, {
+	    key: 'moveCalenderByMonth',
+	    value: function moveCalenderByMonth(months) {
+	      var mo = this.calendar.currentCalendar;
+	      this.month = mo.clone().add(months, 'M');
+	      this.calendar = this.buildCalendar(this.month.clone());
+	    }
+	  }, {
+	    key: 'moveToNext',
+	    value: function moveToNext() {
+	      if (this.interceptors.moveToNextClicked) {
+	        this.interceptors.moveToNextClicked.call(this.interceptors.context);
+	      } else {
+	        this.moveCalenderByMonth(1);
+	      }
+	    }
+	  }, {
+	    key: 'moveToPrev',
+	    value: function moveToPrev() {
+	      if (this.interceptors.moveToPrevClicked) {
+	        this.interceptors.moveToPrevClicked.call(this.interceptors.context);
+	      } else {
+	        this.moveCalenderByMonth(-1);
+	      }
+	    }
+	  }, {
+	    key: 'getMonthDateRange',
+	    value: function getMonthDateRange(year, month) {
+	      var startDate = this.Moment([year, month - 1]);
+	      var endDate = this.Moment(startDate).endOf('month');
+	      return { start: startDate, end: endDate };
+	    }
+	  }, {
+	    key: 'isInRange',
+	    value: function isInRange(day) {
+	      var inRange = false;
+	      var rangeStart = this.rangeStart() || null;
+	      var rangeEnd = this.rangeEnd() || null;
+	      inRange = day.isBetween(rangeStart, rangeEnd) || day.isSame(rangeStart, 'day') || inRange || day.isSame(rangeEnd, 'day');
+
+	      return inRange;
+	    }
+	  }, {
+	    key: 'daySelected',
+	    value: function daySelected(day) {
+	      if (!day.disabled) {
+	        if (this.interceptors.daySelected) {
+	          this.interceptors.daySelected.call(this.interceptors.context, day.mo);
+	        }
+	      }
+	    }
+	  }, {
+	    key: 'dateInputEntered',
+	    value: function dateInputEntered(ev, value) {
+	      if (ev.keyCode == 13) {
+	        this.dateInputSelected(ev, value);
+
+	        // should prevent form submit if placed inside a form
+	        ev.preventDefault();
+	      }
+	    }
+	  }, {
+	    key: 'dateInputSelected',
+	    value: function dateInputSelected(ev, value) {
+	      var day = this.Moment(value, this.getInputFormat(), true);
+
+	      if (day.isValid()) {
+	        var minDay = this.minDay();
+	        var maxDay = this.maxDay();
+	        day = minDay && day.isBefore(minDay, 'day') ? minDay : day;
+	        day = maxDay && day.isAfter(maxDay, 'day') ? maxDay : day;
+
+	        if (!this.selectedDay() || !this.selectedDay().isSame(day, 'day')) {
+	          if (this.interceptors.inputSelected) {
+	            this.interceptors.inputSelected(day);
+	          } else {
+	            this.daySelected({ mo: day });
+	          }
+	        }
+	      }
+	    }
+	  }, {
+	    key: 'getFormattedMonth',
+	    value: function getFormattedMonth(day) {
+	      return this.Moment(day).format(this.getMonthFormat());
+	    }
+	  }, {
+	    key: 'getMonthFormat',
+	    value: function getMonthFormat() {
+	      return this.monthFormat() || 'MMMM YYYY';
+	    }
+	  }, {
+	    key: 'getInputFormat',
+	    value: function getInputFormat() {
+	      return this.inputFormat() || 'MMM DD, YYYY';
+	    }
+	  }, {
+	    key: 'showLeftArrow',
+	    value: function showLeftArrow() {
+	      if (this.minMonth()) {
+	        return !this.minMonth().isSame(this.calendar.currentCalendar.clone().subtract(1, 'M'), 'M');
+	      } else if (this.minDay()) {
+	        return !this.minDay().isSame(this.calendar.currentCalendar, 'M');
+	      } else {
+	        return true;
+	      }
+	    }
+	  }, {
+	    key: 'showRightArrow',
+	    value: function showRightArrow() {
+	      if (this.maxMonth()) {
+	        return !this.maxMonth().isSame(this.getMonth().clone().add(1, 'M'), 'M');
+	      } else if (this.maxDay()) {
+	        return !this.maxDay().isSame(this.getMonth(), 'M');
+	      } else {
+	        return true;
+	      }
+	    }
+	  }, {
+	    key: '_showInput',
+	    value: function _showInput() {
+	      return angular.isDefined(this.showInput()) ? this.showInput() : true;
+	    }
+	  }]);
+
+	  return CalendarController;
+	})();
+
+/***/ },
+/* 4 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }; })();
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	exports.ObDateRangePicker = ObDateRangePicker;
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function ObDateRangePicker() {
+	  'ngInject';
+
+	  var directive = {
+	    restrict: 'E',
+	    scope: {
+	      weekStart: '&',
+	      range: '=?',
+	      weekDaysName: '&',
+	      format: '&',
+	      ranges: '&',
+	      minDay: '&',
+	      maxDay: '&',
+	      defaultEmpty: '&',
+	      monthFormat: '&',
+	      inputFormat: '&',
+	      onApply: '&',
+	      linkedCalendars: '&',
+	      autoApply: '&',
+	      disabled: '&',
+	      calendarsAlwaysOn: '&',
+	      api: '=?'
+	    },
+	    controller: ObDateRangePickerController,
+	    templateUrl: 'app/directives/ob-date-range-picker/ob-date-range-picker.html',
+	    controllerAs: 'obDateRangePicker',
+	    bindToController: true
+	  };
+
+	  return directive;
+	}
+
+	var ObDateRangePickerController = (function () {
+	  ObDateRangePickerController.$inject = ["$document", "$element", "$scope", "moment"];
+	  function ObDateRangePickerController($document, $element, $scope, moment) {
+	    'ngInject';
+
+	    var _this = this;
+
+	    _classCallCheck(this, ObDateRangePickerController);
+
+	    this.Element = $element;
+	    this.Document = $document;
+	    this.Scope = $scope;
+	    this.Moment = moment;
+	    this.range = this.range || {};
+	    this.pickerApi = {};
+	    this.isCustomVisible = this.calendarsAlwaysOn();
+
+	    this.setOpenCloseLogic();
+	    this.setWatchers();
+	    this.value = 'Select a Range';
+
+	    this.api && _extends(this.api, {
+	      setDateRange: this.setDateRange.bind(this),
+	      togglePicker: this.togglePicker.bind(this),
+	      render: function render() {
+	        _this.render();
+	        _this.pickerApi.render();
+	      }
+	    });
+	    this.preRanges = this.ranges() || [];
+	    if (this.preRanges.length) {
+	      this.preRanges.push({
+	        name: 'Custom',
+	        isCustom: true
+	      });
+	    } else {
+	      this.isCustomVisible = true;
+	    }
+
+	    this.render();
+	    this.setListeners();
+	  }
+
+	  _createClass(ObDateRangePickerController, [{
+	    key: 'render',
+	    value: function render() {
+	      this.setPredefinedStatus();
+
+	      if (this.range.start == null || this.range.end == null) {
+	        this.range.start = null;
+	        this.range.end = null;
+	        this._range = {
+	          start: this.Moment(),
+	          end: this.Moment()
+	        };
+	      }
+
+	      if (this.range.start && this.range.end && !this.Moment.isMoment(this.range.start) && !this.Moment.isMoment(this.range.end) && this.format()) {
+
+	        this._range = {
+	          start: this.Moment(this.range.start, this.getFormat()),
+	          end: this.Moment(this.range.end, this.getFormat())
+	        };
+	      } else if (this.Moment.isMoment(this.range.start) && this.Moment.isMoment(this.range.end)) {
+	        this._range = {
+	          start: this.range.start,
+	          end: this.range.end
+	        };
+	      } else if (this.preRanges.length > 1 && angular.isUndefined(this._range)) {
+	        var firstPreRange = this.preRanges[0];
+	        this._range.start = firstPreRange.start;
+	        this._range.end = firstPreRange.end;
+	      }
+
+	      if (this._range.start && this._range.start.isAfter(this._range.end)) {
+	        this._range.start = this._range.end.clone();
+	      } else if (this._range.end && this._range.end.isBefore(this._range.start)) {
+	        this._range.end = this._range.start.clone();
+	      }
+
+	      this.applyMinMaxDaysToRange();
+
+	      if (!this.defaultEmpty()) {
+	        this.setRange();
+	      }
+	      this.value = this.getRangeValue();
+	      this.markPredefined(this._range.start, this._range.end);
+	      this.setPickerInterceptors();
+	    }
+	  }, {
+	    key: 'applyMinMaxDaysToRange',
+	    value: function applyMinMaxDaysToRange() {
+	      if (this.minDay()) {
+	        var minDay = this._getMinDay();
+	        this._range.start = this._range.start.isBefore(minDay, 'd') ? minDay : this._range.start;
+	        this._range.end = this._range.end.isBefore(minDay, 'd') ? minDay : this._range.end;
+	      }
+
+	      if (this.maxDay()) {
+	        var maxDay = this._getMaxDay();
+	        this._range.start = this._range.start.isAfter(maxDay) ? maxDay : this._range.start;
+	        this._range.end = this._range.end.isAfter(maxDay) ? maxDay : this._range.end;
+	      }
+	    }
+	  }, {
+	    key: 'setPickerInterceptors',
+	    value: function setPickerInterceptors() {
+	      var _this2 = this;
+
+	      this.pickerInterceptors = {
+	        rangeSelectedByClick: function rangeSelectedByClick() {
+	          if (_this2.autoApply()) {
+	            _this2.applyChanges();
+	          }
+	        }
+	      };
+	    }
+	  }, {
+	    key: 'setPredefinedStatus',
+	    value: function setPredefinedStatus() {
+	      var _this3 = this;
+
+	      this.preRanges.forEach(function (range) {
+	        if (!range.isCustom) {
+	          range.disabled = false;
+
+	          if (_this3.minDay()) {
+	            var minDay = _this3._getMinDay();
+	            range.disabled = range.start.isBefore(minDay, 'd');
+	          }
+
+	          if (!range.disabled && _this3.maxDay()) {
+	            var maxDay = _this3._getMaxDay();
+	            range.disabled = range.end.isAfter(maxDay, 'd');
+	          }
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'setWatchers',
+	    value: function setWatchers() {
+	      var _this4 = this;
+
+	      this.Scope.$watchGroup([function () {
+	        return _this4._range.start;
+	      }, function () {
+	        return _this4._range.end;
+	      }], function (_ref) {
+	        var _ref2 = _slicedToArray(_ref, 2);
+
+	        var start = _ref2[0];
+	        var end = _ref2[1];
+
+	        if (!_this4.selfChange) {
+	          if (start && end) {
+	            if (_this4.preRanges.length) {
+	              _this4.preRanges[_this4.preRanges.length - 1].start = start;
+	              _this4.preRanges[_this4.preRanges.length - 1].end = end;
+	              _this4.markPredefined(start, end);
+	            }
+	            _this4.value = _this4.getRangeValue();
+	          }
+	        }
+
+	        _this4.selfChange = false;
+	      });
+	    }
+	  }, {
+	    key: 'setOpenCloseLogic',
+	    value: function setOpenCloseLogic() {
+	      this.isPickerVisible = false;
+	      this.pickerPopup = angular.element(this.Element[0].querySelector('.picker'));
+	      this.elemClickFlag = false;
+	    }
+	  }, {
+	    key: 'setListeners',
+	    value: function setListeners() {
+	      var _this5 = this;
+
+	      var events = {
+	        documentClick: function documentClick() {
+	          if (_this5.elemClickFlag) {
+	            _this5.elemClickFlag = false;
+	          } else {
+	            _this5.isPickerVisible && _this5.discardChanges();
+	            _this5.Scope.$apply();
+	          }
+	        },
+	        documentEsc: function documentEsc(e) {
+	          if (e.keyCode == 27 && _this5.isPickerVisible) {
+	            _this5.discardChanges();
+	            _this5.hidePicker();
+	            _this5.Scope.$apply();
+	          }
+	        },
+	        pickerClick: function pickerClick() {
+	          _this5.elemClickFlag = true;
+	          _this5.Scope.$apply();
+	        }
+	      };
+
+	      this.pickerPopup.on('click', events.pickerClick.bind(this));
+	      this.Document.on('click', events.documentClick.bind(this));
+	      this.Document.on('keydown', events.documentEsc.bind(this));
+
+	      this.Scope.$on('$destroy', function () {
+	        _this5.pickerPopup.off('click', events.pickerClick);
+	        _this5.Document.off('click', events.documentClick);
+	        _this5.Document.off('keydown', events.documentClick);
+	      });
+	    }
+	  }, {
+	    key: 'togglePicker',
+	    value: function togglePicker() {
+	      var disabled = angular.isDefined(this.disabled()) ? this.disabled() : false;
+	      if (!disabled && !this.isPickerVisible) {
+	        this.isPickerVisible = true;
+	        this.elemClickFlag = true;
+	      } else {
+	        this.isPickerVisible = false;
+	      }
+	    }
+	  }, {
+	    key: 'hidePicker',
+	    value: function hidePicker() {
+	      this.isPickerVisible = false;
+	    }
+	  }, {
+	    key: 'setRange',
+	    value: function setRange() {
+	      var range = arguments.length <= 0 || arguments[0] === undefined ? this._range : arguments[0];
+
+	      if (this.format()) {
+	        this.range.start = range.start.format(this.getFormat());
+	        this.range.end = range.end.format(this.getFormat());
+	      } else {
+	        this.range.start = range.start;
+	        this.range.end = range.end;
+	      }
+	    }
+	  }, {
+	    key: 'predefinedRangeSelected',
+	    value: function predefinedRangeSelected(range, index) {
+	      if (!range.disabled) {
+	        if (!range.isCustom) {
+	          this.selfChange = true;
+	          this.selectedRengeIndex = index;
+	          this.value = range.name;
+	          this._range.start = range.start;
+	          this._range.end = range.end;
+	          this.isCustomVisible = this.calendarsAlwaysOn() || false;
+	          this.applyChanges();
+	        } else {
+	          this.isCustomVisible = true;
+	        }
+	      }
+	    }
+	  }, {
+	    key: 'getFormat',
+	    value: function getFormat() {
+	      return this.format() || 'MM-DD-YYYY';
+	    }
+	  }, {
+	    key: 'discardChanges',
+	    value: function discardChanges() {
+	      var format = this.getFormat();
+	      var start = undefined,
+	          end = undefined;
+
+	      if (this.range.start != null) {
+	        start = this.Moment(this.range.start, format);
+	        end = this.Moment(this.range.end, format);
+	      } else {
+	        start = this.Moment();
+	        end = this.Moment();
+	      }
+	      this._range.start = start;
+	      this._range.end = end;
+	      this.value = this.getRangeValue();
+	      this.pickerApi.setCalendarPosition(start, end);
+	      this.hidePicker();
+	    }
+	  }, {
+	    key: 'clearChanges',
+	    value: function clearChanges() {
+	      this._range.start = this.Moment();
+	      this.range.start = null;
+
+	      this._range.end = this.Moment();
+	      this.range.end = null;
+	      this.value = this.getRangeValue();
+	      this.hidePicker();
+	    }
+	  }, {
+	    key: 'markPredefined',
+	    value: function markPredefined(start, end) {
+	      var _this6 = this;
+
+	      this.selectedRengeIndex = this.preRanges.findIndex(function (range) {
+	        if (_this6.defaultEmpty() && _this6.range.start == undefined) return false;
+	        return start.isSame(range.start, 'day') && end.isSame(range.end, 'day');
+	      });
+	    }
+	  }, {
+	    key: 'getRangeValue',
+	    value: function getRangeValue() {
+	      if (this.range.start == null) {
+	        return 'Select a Range';
+	      }
+	      var value = undefined;
+	      var format = this.getFormat();
+	      var start = this.Moment(this.range.start, format);
+	      var end = this.Moment(this.range.end, format);
+	      if (this.preRanges.length) {
+	        var index = this.preRanges.findIndex(function (range) {
+	          return start.isSame(range.start, 'day') && end.isSame(range.end, 'day');
+	        });
+
+	        if (index !== -1) {
+	          if (this.preRanges[index].isCustom) {
+	            value = this.preRanges[index].start.format(format) + ' - ' + this.preRanges[index].end.format(format);
+	          } else {
+	            value = this.preRanges[index].name;
+	          }
+	        } else {
+	          value = start.format(format) + ' - ' + end.format(format);
+	        }
+	      } else {
+	        value = start.format(format) + ' - ' + end.format(format);
+	      }
+
+	      return value;
+	    }
+	  }, {
+	    key: 'applyChanges',
+	    value: function applyChanges() {
+	      var callApply = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
+
+	      this.setRange();
+	      this.hidePicker();
+	      this.value = this.getRangeValue();
+	      this.pickerApi.setCalendarPosition(this._range.start, this._range.end);
+	      if (callApply && this.onApply) {
+	        this.onApply({ start: this._range.start, end: this._range.end });
+	      }
+	    }
+	  }, {
+	    key: 'getInputFormat',
+	    value: function getInputFormat() {
+	      return this.inputFormat() || 'MMM DD, YYYY';
+	    }
+	  }, {
+	    key: 'setDateRange',
+	    value: function setDateRange(range) {
+	      this._range.start = range.start;
+	      this._range.end = range.end;
+	      this.applyChanges(false);
+	    }
+	  }, {
+	    key: '_getMinDay',
+	    value: function _getMinDay() {
+	      return this.minDay() ? this.Moment(this.minDay(), this.getFormat()) : undefined;
+	    }
+	  }, {
+	    key: '_getMaxDay',
+	    value: function _getMaxDay() {
+	      return this.maxDay() ? this.Moment(this.maxDay(), this.getFormat()) : undefined;
+	    }
+	  }]);
+
+	  return ObDateRangePickerController;
+	})();
+
+/***/ },
+/* 5 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	exports.ObDayPicker = ObDayPicker;
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function ObDayPicker() {
+	  'ngInject';
+
+	  var directive = {
+	    restrict: 'E',
+	    scope: {
+	      weekStart: '&',
+	      selectedDay: '=?',
+	      weekDaysName: '&',
+	      format: '&',
+	      minDay: '&',
+	      maxDay: '&',
+	      monthFormat: '&',
+	      displayFormat: '&',
+	      changeYear: '=',
+	      onApply: '&',
+	      disabled: '&',
+	      formName: '@name',
+	      isValidDateEnabled: '&validDay',
+	      autoApply: '&',
+	      api: '=?'
+	    },
+	    controller: ObDayPickerController,
+	    templateUrl: 'app/directives/ob-day-picker/ob-day-picker.html',
+	    controllerAs: 'dayPicker',
+	    bindToController: true
+	  };
+
+	  return directive;
+	}
+
+	var ObDayPickerController = (function () {
+	  ObDayPickerController.$inject = ["$document", "$element", "$scope", "$timeout", "moment"];
+	  function ObDayPickerController($document, $element, $scope, $timeout, moment) {
+	    'ngInject';
+
+	    var _this = this;
+
+	    _classCallCheck(this, ObDayPickerController);
+
+	    this.Element = $element;
+	    this.Document = $document;
+	    this.Scope = $scope;
+	    this.$timeout = $timeout;
+	    this.Moment = moment;
+	    this.formName = this.formName || 'dayPickerInput';
+	    this.setOpenCloseLogic();
+	    this._selectedDay = this.getSelectedDay();
+	    this.value = this.Moment(this._selectedDay).format(this.getDisplayFormat());
+	    this.setCalendarInterceptors();
+	    this.calendarApi = {};
+
+	    this.api && _extends(this.api, {
+	      render: function render() {
+	        _this.render();
+	      }
+	    });
+
+	    this.setListeners();
+	    this.dayValidity = this.checkIfDayIsValid(this._selectedDay);
+	    this.$timeout(function () {
+	      _this.applyValidity(_this.dayValidity);
+	    });
+	  }
+
+	  _createClass(ObDayPickerController, [{
+	    key: 'render',
+	    value: function render() {
+	      this.dayValidity = this.checkIfDayIsValid(this._selectedDay);
+	      this.applyValidity(this.dayValidity);
+	      this.calendarApi.render && this.calendarApi.render();
+	    }
+	  }, {
+	    key: 'setOpenCloseLogic',
+	    value: function setOpenCloseLogic() {
+	      this.isPickerVisible = false;
+	      this.pickerPopup = angular.element(this.Element[0].querySelector('.picker'));
+	      this.elemClickFlag = false;
+	    }
+	  }, {
+	    key: 'setCalendarInterceptors',
+	    value: function setCalendarInterceptors() {
+	      this.calendarInterceptors = {
+	        daySelected: this.daySelected.bind(this)
+	      };
+	    }
+	  }, {
+	    key: 'setListeners',
+	    value: function setListeners() {
+	      var _this2 = this;
+
+	      var events = {
+	        documentClick: function documentClick() {
+	          if (_this2.elemClickFlag) {
+	            _this2.elemClickFlag = false;
+	          } else {
+	            _this2.onBlur();
+	            _this2.Scope.$digest();
+	          }
+	        },
+	        pickerClick: function pickerClick() {
+	          _this2.elemClickFlag = true;
+	          _this2.Scope.$digest();
+	        }
+	      };
+
+	      this.pickerPopup.on('click', events.pickerClick.bind(this));
+	      this.Document.on('click', events.documentClick.bind(this));
+
+	      this.Scope.$on('$destroy', function () {
+	        _this2.pickerPopup.off('click', events.pickerClick);
+	        _this2.Document.off('click', events.documentClick);
+	      });
+
+	      this.Scope.$watchGroup([function () {
+	        return _this2.Moment(_this2.minDay(), _this2.getFormat()).format();
+	      }, function () {
+	        return _this2.Moment(_this2.maxDay(), _this2.getFormat()).format();
+	      }], function (min, max) {
+	        if (min && min[0] || max && max[0]) {
+	          _this2.render();
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'showPicker',
+	    value: function showPicker() {
+	      var disabled = angular.isDefined(this.disabled()) ? this.disabled() : false;
+	      if (!disabled && !this.isPickerVisible) {
+	        this.isPickerVisible = true;
+	      }
+	      this.elemClickFlag = true;
+	    }
+	  }, {
+	    key: 'hidePicker',
+	    value: function hidePicker() {
+	      this.isPickerVisible = false;
+	    }
+	  }, {
+	    key: 'daySelected',
+	    value: function daySelected(day) {
+	      var _this3 = this;
+
+	      var timeout = arguments.length <= 1 || arguments[1] === undefined ? 100 : arguments[1];
+
+	      this.applyValidity(this.checkIfDayIsValid(day));
+	      if (!day.isSame(this._selectedDay, 'day')) {
+	        this.calendarApi.render();
+	        this.value = this.Moment(day).format(this.getDisplayFormat());
+	        this._selectedDay = day;
+
+	        this.$timeout(function () {
+	          _this3.hidePicker();
+	          _this3.updateSelectedDate(day);
+	        }, timeout);
+	      } else {
+	        this.hidePicker();
+	      }
+	    }
+	  }, {
+	    key: 'dateInputEntered',
+	    value: function dateInputEntered(e, value) {
+	      var isDaySelectable = this.checkIfDayIsValid(value);
+	      switch (e.keyCode) {
+	        case 9:
+	        case 13:
+	          var day = this.getInputValue();
+	          if (isDaySelectable) {
+	            this.daySelected(day, 0);
+	          } else {
+	            this.hidePicker();
+
+	            // should prevent form submit if placed inside a form
+	            e.keyCode === 13 && e.preventDefault();
+	          }
+	          break;
+	        case 40:
+	          this.isPickerVisible = true;
+	          break;
+	        case 27:
+	          this.isPickerVisible = false;
+	          this.value = this._selectedDay.format(this.getDisplayFormat());
+	          break;
+	        default:
+	          break;
+	      }
+	    }
+	  }, {
+	    key: 'getInputValue',
+	    value: function getInputValue() {
+	      return this.Moment(this.value, this.getDisplayFormat(), true);
+	    }
+	  }, {
+	    key: 'onBlur',
+	    value: function onBlur() {
+	      var currentValue = this.getInputValue();
+	      var isValid = this.checkIfDayIsValid(currentValue);
+	      if (isValid) {
+	        this.daySelected(currentValue);
+	      } else {
+	        this.hidePicker();
+	      }
+	    }
+	  }, {
+	    key: 'updateValidity',
+	    value: function updateValidity() {
+	      var day = this.getInputValue();
+	      var isValid = this.checkIfDayIsValid(day);
+	      this.applyValidity(isValid);
+
+	      if (isValid && this.autoApply() && !day.isSame(this._selectedDay, 'day')) {
+	        this._selectedDay = day;
+	        this.updateSelectedDate(day);
+	      }
+	    }
+	  }, {
+	    key: 'checkIfDayIsValid',
+	    value: function checkIfDayIsValid(value) {
+	      var day = this.Moment(value, this.getDisplayFormat(), true);
+	      var minDay = this._getMinDay();
+	      var maxDay = this._getMaxDay();
+	      var isValid = day.isValid();
+
+	      if (isValid && minDay) {
+	        isValid = day.isAfter(minDay, 'day') || day.isSame(minDay, 'day');
+	      }
+
+	      if (isValid && maxDay) {
+	        isValid = day.isBefore(maxDay, 'day') || day.isSame(maxDay, 'day');
+	      }
+
+	      return isValid;
+	    }
+	  }, {
+	    key: 'applyValidity',
+	    value: function applyValidity(isDateValid) {
+	      if (this.Scope[this.formName]) {
+	        if (this.disabled && this.disabled()) {
+	          this.Scope[this.formName].$setValidity('validDay', true);
+	          this.dayValidity = true;
+	        } else if (this.isValidDateEnabled() && this.Scope[this.formName]) {
+	          this.Scope[this.formName].$setValidity('validDay', isDateValid);
+	          this.dayValidity = isDateValid;
+	        }
+	      }
+	    }
+	  }, {
+	    key: 'updateSelectedDate',
+	    value: function updateSelectedDate() {
+	      var day = arguments.length <= 0 || arguments[0] === undefined ? this._selectedDay : arguments[0];
+
+	      if (this.format()) {
+	        this.selectedDay = day.format(this.getFormat());
+	      } else {
+	        this.selectedDay = day;
+	      }
+
+	      this.onApply({ day: this.selectedDay });
+	    }
+	  }, {
+	    key: 'getSelectedDay',
+	    value: function getSelectedDay() {
+	      return this.Moment(this.selectedDay || this.Moment(), this.getFormat());
+	    }
+	  }, {
+	    key: 'getDisplayFormat',
+	    value: function getDisplayFormat() {
+	      return this.displayFormat() || this.getFormat();
+	    }
+	  }, {
+	    key: 'getFormat',
+	    value: function getFormat() {
+	      return this.format() || 'MMM DD, YYYY';
+	    }
+	  }, {
+	    key: '_getMinDay',
+	    value: function _getMinDay() {
+	      return this.minDay() ? this.Moment(this.minDay(), this.getFormat()) : undefined;
+	    }
+	  }, {
+	    key: '_getMaxDay',
+	    value: function _getMaxDay() {
+	      return this.maxDay() ? this.Moment(this.maxDay(), this.getFormat()) : undefined;
+	    }
+	  }]);
+
+	  return ObDayPickerController;
+	})();
+
+/***/ },
+/* 6 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	exports.YearPicker = YearPicker;
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function YearPicker() {
+	  'ngInject';
+
+	  var directive = {
+	    restrict: 'E',
+	    scope: {
+	      yearChanged: '&?',
+	      selectedYear: '=',
+	      minYear: '&',
+	      maxYear: '&'
+	    },
+	    controller: YearPickerController,
+	    templateUrl: 'app/directives/year-picker/year-picker.html',
+	    controllerAs: 'yearPicker',
+	    bindToController: true
+	  };
+
+	  return directive;
+	}
+
+	var YearPickerController = (function () {
+	  YearPickerController.$inject = ["moment"];
+	  function YearPickerController(moment) {
+	    'ngInject';
+
+	    _classCallCheck(this, YearPickerController);
+
+	    this.Moment = moment;
+	    this.years = this.generateYears();
+	    this.selectedYear = this.selectedYear || this.defaultYear();
+	  }
+
+	  _createClass(YearPickerController, [{
+	    key: 'defaultYear',
+	    value: function defaultYear() {
+	      var year = this.selectedYear || this.Moment().year();
+	      for (var i = 0; i <= this.years.length; i++) {
+	        if (this.years[i].value == year) {
+	          return this.years[i].value;
+	        }
+	      }
+	      return this.years[0].value;
+	    }
+	  }, {
+	    key: 'generateYears',
+	    value: function generateYears() {
+	      var years = [];
+	      for (var i = this.endYear(); i >= this.startYear(); i--) {
+	        years.push({ value: i, label: i });
+	      }
+	      return years;
+	    }
+	  }, {
+	    key: 'startYear',
+	    value: function startYear() {
+	      if (this.minYear()) {
+	        return this.minYear();
+	      }
+	      return this.Moment().year() - 80;
+	    }
+	  }, {
+	    key: 'endYear',
+	    value: function endYear() {
+	      if (this.maxYear()) {
+	        return this.maxYear();
+	      }
+	      return this.Moment().year() + 5;
+	    }
+	  }, {
+	    key: 'onYearChange',
+	    value: function onYearChange() {
+	      this.yearChanged({ year: this.selectedYear });
+	    }
+	  }]);
+
+	  return YearPickerController;
+	})();
+
+/***/ },
+/* 7 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	exports.MonthPicker = MonthPicker;
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function MonthPicker() {
+	  'ngInject';
+
+	  var directive = {
+	    restrict: 'E',
+	    scope: {
+	      selectedMonth: '=',
+	      monthChanged: '&?'
+	    },
+	    controller: MonthPickerController,
+	    templateUrl: 'app/directives/month-picker/month-picker.html',
+	    controllerAs: 'monthPicker',
+	    bindToController: true
+	  };
+
+	  return directive;
+	}
+
+	var MonthPickerController = (function () {
+	  MonthPickerController.$inject = ["moment"];
+	  function MonthPickerController(moment) {
+	    'ngInject';
+
+	    _classCallCheck(this, MonthPickerController);
+
+	    this.Moment = moment;
+	    this.months = this.generateMonths();
+	    this.month = this.defaultMonth();
+	  }
+
+	  _createClass(MonthPickerController, [{
+	    key: 'defaultMonth',
+	    value: function defaultMonth() {
+	      var month = this.selectedMonth || this.Moment().month();
+	      for (var i = 0; i <= this.months.length; i++) {
+	        if (this.months[i].value == month) {
+	          return this.months[i].value;
+	        }
+	      }
+	    }
+	  }, {
+	    key: 'generateMonths',
+	    value: function generateMonths() {
+	      var months = [];
+	      for (var i = 0; i <= 11; i++) {
+	        months.push({
+	          value: i,
+	          label: this.Moment().month(i).format('MMMM')
+	        });
+	      }
+	      return months;
+	    }
+	  }, {
+	    key: 'onMonthChange',
+	    value: function onMonthChange() {
+	      this.monthChanged({ newMonth: this.month.value });
+	    }
+	  }]);
+
+	  return MonthPickerController;
+	})();
+
+/***/ },
+/* 8 */
+/***/ function(module, exports) {
+
+	/*eslint-disable */
+	'use strict';
+
+	if (!Array.prototype.findIndex) {
+	  Array.prototype.findIndex = function (predicate) {
+	    if (this === null) {
+	      throw new TypeError('Array.prototype.findIndex called on null or undefined');
+	    }
+	    if (typeof predicate !== 'function') {
+	      throw new TypeError('predicate must be a function');
+	    }
+	    var list = Object(this);
+	    var length = list.length >>> 0;
+	    var thisArg = arguments[1];
+	    var value;
+
+	    for (var i = 0; i < length; i++) {
+	      value = list[i];
+	      if (predicate.call(thisArg, value, i, list)) {
+	        return i;
+	      }
+	    }
+	    return -1;
+	  };
+	}
+	/*eslint-enable */
+
+/***/ }
+/******/ ]);
+angular.module("obDateRangePicker").run(["$templateCache", function($templateCache) {$templateCache.put("app/directives/calendar/calendar.html","<div class=\"input-container\" ng-if=\"month._showInput()\"><label>{{month.Attrs.label}}</label> <input type=\"text\" ng-model=\"month.value\" ng-keypress=\"month.dateInputEntered($event, month.value)\" ng-blur=\"month.dateInputSelected($event, month.value)\"></div><div class=\"header\"><span class=\"arrow-btn left\" ng-if=\"month.showLeftArrow()\" ng-click=\"month.moveToPrev()\"></span> <span class=\"date\"><span ng-if=\"month.changeYear\"><month-picker month-changed=\"month.monthChanged(newMonth)\" selected-month=\"month.selectedMonth\"></month-picker></span> <span ng-if=\"month.changeYear\"><year-picker year-changed=\"month.yearChanged(year)\" selected-year=\"month.selectedYear\"></year-picker></span> <span ng-if=\"!month.changeYear\">{{month.getFormattedMonth(month.calendar.currentCalendar)}}</span></span> <span class=\"arrow-btn right\" ng-if=\"month.showRightArrow()\" ng-click=\"month.moveToNext(1)\"></span></div><div class=\"board\"><div class=\"days-of-week\"><span class=\"day-name\" ng-repeat=\"day in month.daysName track by $index\">{{day}}</span></div><div class=\"weeks\"><div ng-repeat=\"week in month.calendar.monthWeeks track by $index\"><span class=\"day\" ng-repeat=\"day in week track by $index\" ng-class=\"{ \'selected\': day.selected, \'current\': day.currentDay, \'other-month\': !day.currentMonth, \'in-range\': day.inRange, \'range-start\': day.rangeStart, \'range-end\': day.rangeEnd, \'disabled\': day.disabled }\" ng-click=\"month.daySelected(day)\">{{day.mo.format(\'D\')}}</span></div></div></div>");
+$templateCache.put("app/directives/date-range-picker/date-range-picker.html","<calendar class=\"calendar\" api=\"picker.startCalendarApi\" min-day=\"picker.minDay()\" max-day=\"picker.maxDay()\" week-start=\"picker.weekStart()\" month=\"picker.startCalendar\" interceptors=\"picker.startCalendarInterceptors\" range-start=\"picker.rangeStart\" range-end=\"picker.rangeEnd\" selected-day=\"picker.rangeStart\" max-month=\"picker.endCalendar\" week-days-name=\"picker.weekDaysName()\" month-format=\"picker.monthFormat()\" input-format=\"picker.inputFormat()\" label=\"Start Date\"></calendar><calendar class=\"calendar\" api=\"picker.endCalendarApi\" min-day=\"picker.minDay()\" max-day=\"picker.maxDay()\" week-start=\"picker.weekStart()\" month=\"picker.endCalendar\" interceptors=\"picker.endCalendarInterceptors\" range-start=\"picker.rangeStart\" range-end=\"picker.rangeEnd\" selected-day=\"picker.rangeEnd\" min-month=\"picker.startCalendar\" week-days-name=\"picker.weekDaysName()\" month-format=\"picker.monthFormat()\" input-format=\"picker.inputFormat()\" label=\"End Date\"></calendar>");
+$templateCache.put("app/directives/ob-date-range-picker/ob-date-range-picker.html","<div class=\"picker-dropdown-container\" ng-class=\"{\'disabled\': obDateRangePicker.disabled()}\"><div class=\"picker-dropdown\" ng-class=\"{\'open\': obDateRangePicker.isPickerVisible}\" ng-click=\"obDateRangePicker.togglePicker()\"><span>{{obDateRangePicker.value}}</span></div><div class=\"picker\" ng-class=\"{\'open\': obDateRangePicker.isPickerVisible}\" ng-show=\"obDateRangePicker.isPickerVisible\"><div class=\"date-range\" ng-show=\"obDateRangePicker.isCustomVisible\"><date-range-picker ng-if=\"obDateRangePicker.isPickerVisible\" api=\"obDateRangePicker.pickerApi\" interceptors=\"obDateRangePicker.pickerInterceptors\" linked-calendars=\"obDateRangePicker.linkedCalendars()\" week-start=\"obDateRangePicker.weekStart()\" range=\"obDateRangePicker._range\" week-days-name=\"obDateRangePicker.weekDaysName()\" min-day=\"obDateRangePicker._getMinDay()\" max-day=\"obDateRangePicker._getMaxDay()\" month-format=\"obDateRangePicker.monthFormat()\" input-format=\"obDateRangePicker.inputFormat()\"></date-range-picker></div><div class=\"ranges-actions\" ng-class=\"{\'custom-open\': obDateRangePicker.isCustomVisible}\"><div class=\"ranges\"><div class=\"range\" ng-repeat=\"range in obDateRangePicker.preRanges track by $index\" ng-class=\"{\'selected\': obDateRangePicker.selectedRengeIndex === $index, \'disabled\': range.disabled}\" ng-click=\"obDateRangePicker.predefinedRangeSelected(range, $index)\" ng-if=\"!$last || ($last && !obDateRangePicker.calendarsAlwaysOn())\">{{range.name}}</div></div><div class=\"actions\"><div class=\"drp_btn cancel\" ng-click=\"obDateRangePicker.discardChanges()\" ng-if=\"!obDateRangePicker.autoApply()\">Cancel</div><div class=\"drp_btn clear\" ng-click=\"obDateRangePicker.clearChanges()\" ng-if=\"obDateRangePicker.defaultEmpty()\">Clear</div><div class=\"drp_btn apply\" ng-click=\"obDateRangePicker.applyChanges()\" ng-if=\"!obDateRangePicker.autoApply()\">APPLY</div></div></div></div></div>");
+$templateCache.put("app/directives/month-picker/month-picker.html","<select ng-options=\"month.value as month.label for month in monthPicker.months\" ng-model=\"monthPicker.selectedMonth\" ng-change=\"monthPicker.onMonthChange()\"></select>");
+$templateCache.put("app/directives/year-picker/year-picker.html","<select ng-options=\"year.value as year.label for year in yearPicker.years\" ng-model=\"yearPicker.selectedYear\" ng-change=\"yearPicker.onYearChange()\"></select>");
+$templateCache.put("app/directives/ob-day-picker/ob-day-picker.html","<div ng-form=\"{{::dayPicker.formName}}\" class=\"picker-dropdown-container\" ng-class=\"{\'open\': dayPicker.isPickerVisible, \'disabled\': dayPicker.disabled(), \'invalid\': !dayPicker.dayValidity}\"><input class=\"picker-input\" ng-model=\"dayPicker.value\" ng-change=\"dayPicker.updateValidity()\" ng-keydown=\"dayPicker.dateInputEntered($event, dayPicker.value)\" ng-click=\"dayPicker.showPicker()\" ng-disabled=\"dayPicker.disabled()\"><div class=\"picker\" ng-show=\"dayPicker.isPickerVisible\"><calendar class=\"calendar\" api=\"dayPicker.calendarApi\" min-day=\"dayPicker._getMinDay()\" max-day=\"dayPicker._getMaxDay()\" week-start=\"dayPicker.weekStart()\" change-year=\"dayPicker.changeYear\" month=\"dayPicker._selectedDay\" interceptors=\"dayPicker.calendarInterceptors\" selected-day=\"dayPicker._selectedDay\" min-month=\"dayPicker.startCalendar\" week-days-name=\"dayPicker.weekDaysName()\" month-format=\"dayPicker.monthFormat()\" show-input=\"false\"></calendar></div></div>");}]);
