@@ -1,6 +1,7 @@
 <div class="picker-dropdown-container" ng-class="{'disabled': obDateRangePicker.disabled()}">
   <div class="picker-dropdown" ng-class="{'open': obDateRangePicker.isPickerVisible}" ng-click="obDateRangePicker.togglePicker()">
     <span>{{obDateRangePicker.value}}</span>
+    <a ng-click="obDateRangePicker.clearChanges(); $event.stopPropagation()" class="clear" ng-show="obDateRangePicker.defaultEmpty() && obDateRangePicker.range.start">&times;</a>
   </div>
   <div class="picker" ng-class="{'open': obDateRangePicker.isPickerVisible}" ng-show="obDateRangePicker.isPickerVisible">
     <div class="date-range" ng-show="obDateRangePicker.isCustomVisible">
@@ -30,7 +31,6 @@
 
       <div class="actions">
         <div class="drp_btn cancel" ng-click="obDateRangePicker.discardChanges()" ng-if="!obDateRangePicker.autoApply()">Cancel</div>
-        <div class="drp_btn clear" ng-click="obDateRangePicker.clearChanges()" ng-if="obDateRangePicker.defaultEmpty()">Clear</div>
         <div class="drp_btn apply" ng-click="obDateRangePicker.applyChanges()" ng-if="!obDateRangePicker.autoApply()">APPLY</div>
       </div>
     </div>

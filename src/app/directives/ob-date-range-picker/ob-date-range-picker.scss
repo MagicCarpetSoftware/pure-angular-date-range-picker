@@ -44,6 +44,11 @@ ob-daterangepicker {
         border-width: 7px 7px 0 7px;
         border-color: $black transparent transparent transparent;
       }
+
+      .clear {
+        position: absolute;
+        right: 30px;
+      }
     }
 
     .picker {
