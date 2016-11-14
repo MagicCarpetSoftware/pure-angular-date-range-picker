@@ -260,7 +260,7 @@ class ObDateRangePickerController {
   }
 
   getFormat() {
-    return this.format() || 'MM-DD-YYYY';
+    return this.format() || 'DD/MM/YYYY';
   }
 
   discardChanges() {
