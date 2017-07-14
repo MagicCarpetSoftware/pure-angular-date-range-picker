@@ -1,3 +1,5 @@
+import './calendar.scss'
+
 export function Calendar() {
   'ngInject';
 

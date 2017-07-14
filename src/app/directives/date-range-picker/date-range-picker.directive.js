@@ -1,3 +1,5 @@
+import './date-range-picker.scss'
+
 export function DateRangePicker() {
   'ngInject';
 
