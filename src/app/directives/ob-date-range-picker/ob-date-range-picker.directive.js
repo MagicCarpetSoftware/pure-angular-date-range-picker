@@ -1,5 +1,3 @@
-import './ob-date-range-picker.scss';
-
 export function ObDateRangePicker() {
   'ngInject';
 

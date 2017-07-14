@@ -1,8 +1,3 @@
 {
-  "presets": [
-    ["es2015"]
-  ],
-  "plugins": [
-    "angularjs-annotate"
-  ]
+  "plugins": ["object-assign"]
 }

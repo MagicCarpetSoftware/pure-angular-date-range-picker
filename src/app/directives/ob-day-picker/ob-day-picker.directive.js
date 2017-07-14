@@ -1,5 +1,3 @@
-import './ob-day-picker.scss';
-
 export function ObDayPicker() {
   'ngInject';
 
