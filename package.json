@@ -3,8 +3,7 @@
   "version": "0.8.3",
   "dependencies": {
     "moment": "~2.10.6",
-    "angular": "~1.4.2",
-    "babel-polyfill": "^6.23.0"
+    "angular": "~1.4.2"
   },
   "scripts": {
     "build": "webpack",
