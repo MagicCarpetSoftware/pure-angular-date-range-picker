@@ -80,6 +80,10 @@ return /******/ (function(modules) { // webpackBootstrap
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
 var _moment = __webpack_require__(1);
 
 var _moment2 = _interopRequireDefault(_moment);
@@ -88,7 +92,7 @@ var _dateRangePicker = __webpack_require__(2);
 
 var _calendar = __webpack_require__(4);
 
-var _obDateRangePickerDirective = __webpack_require__(6);
+var _obDateRangePicker = __webpack_require__(6);
 
 var _obDayPicker = __webpack_require__(8);
 
@@ -100,7 +104,7 @@ __webpack_require__(12);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-angular.module('obDateRangePicker', []).constant('moment', _moment2.default).directive('dateRangePicker', _dateRangePicker.DateRangePicker).directive('obDaterangepicker', _obDateRangePickerDirective.ObDateRangePicker).directive('calendar', _calendar.Calendar).directive('yearPicker', _yearPicker.YearPicker).directive('monthPicker', _monthPicker.MonthPicker).directive('obDaypicker', _obDayPicker.ObDayPicker);
+exports.default = angular.module('obDateRangePicker', []).constant('moment', _moment2.default).directive('dateRangePicker', _dateRangePicker.DateRangePicker).directive('obDaterangepicker', _obDateRangePicker.ObDateRangePicker).directive('calendar', _calendar.Calendar).directive('yearPicker', _yearPicker.YearPicker).directive('monthPicker', _monthPicker.MonthPicker).directive('obDaypicker', _obDayPicker.ObDayPicker).name;
 
 /***/ }),
 /* 1 */
