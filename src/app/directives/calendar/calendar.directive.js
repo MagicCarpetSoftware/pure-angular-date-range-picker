@@ -1,4 +1,5 @@
 import './calendar.scss'
+import template from './calendar.html';
 
 export function Calendar() {
   'ngInject';
@@ -23,7 +24,7 @@ export function Calendar() {
       showInput: '&',
       api: '=?'
     },
-    templateUrl: 'app/directives/calendar/calendar.html',
+    template,
     controller: CalendarController,
     controllerAs: 'month',
     bindToController: true

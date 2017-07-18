@@ -1,3 +1,5 @@
+import template from './year-picker.html';
+
 export function YearPicker() {
   'ngInject';
 
@@ -10,7 +12,7 @@ export function YearPicker() {
       maxYear: '&'
     },
     controller: YearPickerController,
-    templateUrl: 'app/directives/year-picker/year-picker.html',
+    template,
     controllerAs: 'yearPicker',
     bindToController: true
   };

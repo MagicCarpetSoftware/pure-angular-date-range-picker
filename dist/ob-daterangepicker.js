@@ -90,17 +90,17 @@ var _moment2 = _interopRequireDefault(_moment);
 
 var _dateRangePicker = __webpack_require__(2);
 
-var _calendar = __webpack_require__(4);
+var _calendar = __webpack_require__(5);
 
-var _obDateRangePicker = __webpack_require__(6);
+var _obDateRangePicker = __webpack_require__(8);
 
-var _obDayPicker = __webpack_require__(8);
+var _obDayPicker = __webpack_require__(11);
 
-var _yearPicker = __webpack_require__(10);
+var _yearPicker = __webpack_require__(14);
 
-var _monthPicker = __webpack_require__(11);
+var _monthPicker = __webpack_require__(16);
 
-__webpack_require__(12);
+__webpack_require__(18);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -129,6 +129,12 @@ exports.DateRangePicker = DateRangePicker;
 
 __webpack_require__(3);
 
+var _dateRangePicker = __webpack_require__(4);
+
+var _dateRangePicker2 = _interopRequireDefault(_dateRangePicker);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function DateRangePicker() {
@@ -148,7 +154,7 @@ function DateRangePicker() {
       linkedCalendars: '&',
       interceptors: '&'
     },
-    templateUrl: 'app/directives/date-range-picker/date-range-picker.html',
+    template: _dateRangePicker2.default,
     controller: DateRangePickerController,
     controllerAs: 'picker',
     bindToController: true
@@ -481,6 +487,12 @@ var DateRangePickerController = function () {
 
 /***/ }),
 /* 4 */
+/***/ (function(module, exports) {
+
+module.exports = "<calendar class=\"calendar\"\n          api=\"picker.startCalendarApi\"\n          min-day=\"picker.minDay()\"\n          max-day=\"picker.maxDay()\"\n          week-start=\"picker.weekStart()\"\n          month=\"picker.startCalendar\"\n          interceptors=\"picker.startCalendarInterceptors\"\n          range-start=\"picker.rangeStart\"\n          range-end=\"picker.rangeEnd\"\n          selected-day=\"picker.rangeStart\"\n          max-month=\"picker.endCalendar\"\n          week-days-name=\"picker.weekDaysName()\"\n          month-format=\"picker.monthFormat()\"\n          input-format=\"picker.inputFormat()\"\n          label=\"Start Date\">\n</calendar>\n<calendar class=\"calendar\"\n          api=\"picker.endCalendarApi\"\n          min-day=\"picker.minDay()\"\n          max-day=\"picker.maxDay()\"\n          week-start=\"picker.weekStart()\"\n          month=\"picker.endCalendar\"\n          interceptors=\"picker.endCalendarInterceptors\"\n          range-start=\"picker.rangeStart\"\n          range-end=\"picker.rangeEnd\"\n          selected-day=\"picker.rangeEnd\"\n          min-month=\"picker.startCalendar\"\n          week-days-name=\"picker.weekDaysName()\"\n          month-format=\"picker.monthFormat()\"\n          input-format=\"picker.inputFormat()\"\n          label=\"End Date\">\n</calendar>\n";
+
+/***/ }),
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -494,7 +506,13 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 exports.Calendar = Calendar;
 
-__webpack_require__(5);
+__webpack_require__(6);
+
+var _calendar = __webpack_require__(7);
+
+var _calendar2 = _interopRequireDefault(_calendar);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -521,7 +539,7 @@ function Calendar() {
       showInput: '&',
       api: '=?'
     },
-    templateUrl: 'app/directives/calendar/calendar.html',
+    template: _calendar2.default,
     controller: CalendarController,
     controllerAs: 'month',
     bindToController: true
@@ -828,13 +846,19 @@ var CalendarController = function () {
 }();
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 6 */
+/* 7 */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"input-container\" ng-if=\"month._showInput()\">\n  <label>{{month.Attrs.label}}</label>\n  <input type=\"text\"\n         ng-model=\"month.value\"\n         ng-keypress=\"month.dateInputEntered($event, month.value)\"\n         ng-blur=\"month.dateInputSelected($event, month.value)\"/>\n</div>\n\n<div class=\"header\">\n  <span class=\"arrow-btn left\" ng-if=\"month.showLeftArrow()\" ng-click=\"month.moveToPrev()\"></span>\n  <span class=\"date\">\n\n\n    <span ng-if=\"month.changeYear\">\n      <month-picker month-changed=\"month.monthChanged(newMonth)\" selected-month=\"month.selectedMonth\" />\n    </span>\n    <span ng-if=\"month.changeYear\">\n      <year-picker year-changed=\"month.yearChanged(year)\"\n                   selected-year=\"month.selectedYear\" />\n    </span>\n\n    <span ng-if=\"!month.changeYear\">\n      {{month.getFormattedMonth(month.calendar.currentCalendar)}}\n    </span>\n\n  </span>\n  <span class=\"arrow-btn right\" ng-if=\"month.showRightArrow()\" ng-click=\"month.moveToNext(1)\"></span>\n</div>\n\n<div class=\"board\">\n  <div class=\"days-of-week\">\n    <span class=\"day-name\" ng-repeat=\"day in month.daysName track by $index\">{{day}}</span>\n  </div>\n\n  <div class=\"weeks\">\n    <div ng-repeat=\"week in month.calendar.monthWeeks track by $index\">\n        <span class=\"day\"\n              ng-repeat=\"day in week track by $index\"\n              ng-class=\"{\n                'selected': day.selected,\n                'current': day.currentDay,\n                'other-month': !day.currentMonth,\n                'in-range': day.inRange,\n                'range-start': day.rangeStart,\n                'range-end': day.rangeEnd,\n                'disabled': day.disabled\n              }\"\n              ng-click=\"month.daySelected(day)\">\n              {{day.mo.format('D')}}\n        </span>\n    </div>\n  </div>\n</div>\n";
+
+/***/ }),
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -850,7 +874,13 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 exports.ObDateRangePicker = ObDateRangePicker;
 
-__webpack_require__(7);
+__webpack_require__(9);
+
+var _obDateRangePicker = __webpack_require__(10);
+
+var _obDateRangePicker2 = _interopRequireDefault(_obDateRangePicker);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -878,7 +908,7 @@ function ObDateRangePicker() {
       api: '=?'
     },
     controller: ObDateRangePickerController,
-    templateUrl: 'app/directives/ob-date-range-picker/ob-date-range-picker.html',
+    template: _obDateRangePicker2.default,
     controllerAs: 'obDateRangePicker',
     bindToController: true
   };
@@ -1260,13 +1290,19 @@ var ObDateRangePickerController = function () {
 }();
 
 /***/ }),
-/* 7 */
+/* 9 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 8 */
+/* 10 */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"picker-dropdown-container\" ng-class=\"{'disabled': obDateRangePicker.disabled()}\">\n  <div class=\"picker-dropdown\" ng-class=\"{'open': obDateRangePicker.isPickerVisible}\" ng-click=\"obDateRangePicker.togglePicker()\">\n    <span>{{obDateRangePicker.value}}</span>\n    <a ng-click=\"obDateRangePicker.clearChanges(); $event.stopPropagation()\" class=\"clear\" ng-show=\"obDateRangePicker.defaultEmpty() && obDateRangePicker.range.start\">&times;</a>\n  </div>\n  <div class=\"picker\" ng-class=\"{'open': obDateRangePicker.isPickerVisible}\" ng-show=\"obDateRangePicker.isPickerVisible\">\n    <div class=\"date-range\" ng-show=\"obDateRangePicker.isCustomVisible\">\n      <date-range-picker ng-if=\"obDateRangePicker.isPickerVisible\"\n        api=\"obDateRangePicker.pickerApi\"\n        interceptors=\"obDateRangePicker.pickerInterceptors\"\n        linked-calendars=\"obDateRangePicker.linkedCalendars()\"\n        week-start=\"obDateRangePicker.weekStart()\"\n        range=\"obDateRangePicker._range\"\n        week-days-name=\"obDateRangePicker.weekDaysName()\"\n        min-day=\"obDateRangePicker._getMinDay()\"\n        max-day=\"obDateRangePicker._getMaxDay()\"\n        month-format=\"obDateRangePicker.monthFormat()\"\n        input-format=\"obDateRangePicker.inputFormat()\">\n      </date-range-picker>\n    </div>\n\n    <div class=\"ranges-actions\" ng-class=\"{'custom-open': obDateRangePicker.isCustomVisible}\">\n      <div class=\"ranges\">\n        <div class=\"range\"\n             ng-repeat=\"range in obDateRangePicker.preRanges track by $index\"\n             ng-class=\"{'selected': obDateRangePicker.selectedRengeIndex === $index, 'disabled': range.disabled}\"\n             ng-click=\"obDateRangePicker.predefinedRangeSelected(range, $index)\"\n             ng-if=\"!$last || ($last && !obDateRangePicker.calendarsAlwaysOn())\">{{range.name}}\n        </div>\n      </div>\n\n      <div class=\"actions\">\n        <div class=\"drp_btn cancel\" ng-click=\"obDateRangePicker.discardChanges()\" ng-if=\"!obDateRangePicker.autoApply()\">Cancel</div>\n        <div class=\"drp_btn apply\" ng-click=\"obDateRangePicker.applyChanges()\" ng-if=\"!obDateRangePicker.autoApply()\">APPLY</div>\n      </div>\n    </div>\n  </div>\n</div>\n";
+
+/***/ }),
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1280,7 +1316,13 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 exports.ObDayPicker = ObDayPicker;
 
-__webpack_require__(9);
+__webpack_require__(12);
+
+var _obDayPicker = __webpack_require__(13);
+
+var _obDayPicker2 = _interopRequireDefault(_obDayPicker);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -1307,7 +1349,7 @@ function ObDayPicker() {
       api: '=?'
     },
     controller: ObDayPickerController,
-    templateUrl: 'app/directives/ob-day-picker/ob-day-picker.html',
+    template: _obDayPicker2.default,
     controllerAs: 'dayPicker',
     bindToController: true
   };
@@ -1575,13 +1617,19 @@ var ObDayPickerController = function () {
 }();
 
 /***/ }),
-/* 9 */
+/* 12 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 10 */
+/* 13 */
+/***/ (function(module, exports) {
+
+module.exports = "<div ng-form=\"{{::dayPicker.formName}}\" class=\"picker-dropdown-container\"\n     ng-class=\"{'open': dayPicker.isPickerVisible,\n                'disabled': dayPicker.disabled(),\n                'invalid': !dayPicker.dayValidity}\">\n  <input class=\"picker-input\"\n         ng-model=\"dayPicker.value\"\n         ng-change=\"dayPicker.updateValidity()\"\n         ng-keydown=\"dayPicker.dateInputEntered($event, dayPicker.value)\"\n         ng-click=\"dayPicker.showPicker()\"\n         ng-disabled=\"dayPicker.disabled()\"/>\n  <div class=\"picker\" ng-show=\"dayPicker.isPickerVisible\">\n    <calendar class=\"calendar\"\n              api=\"dayPicker.calendarApi\"\n              min-day=\"dayPicker._getMinDay()\"\n              max-day=\"dayPicker._getMaxDay()\"\n              week-start=\"dayPicker.weekStart()\"\n              change-year=\"dayPicker.changeYear\"\n              month=\"dayPicker._selectedDay\"\n              interceptors=\"dayPicker.calendarInterceptors\"\n              selected-day=\"dayPicker._selectedDay\"\n              min-month=\"dayPicker.startCalendar\"\n              week-days-name=\"dayPicker.weekDaysName()\"\n              month-format=\"dayPicker.monthFormat()\"\n              show-input=\"false\">\n    </calendar>\n  </div>\n</div>\n";
+
+/***/ }),
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1594,6 +1642,12 @@ Object.defineProperty(exports, "__esModule", {
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 exports.YearPicker = YearPicker;
+
+var _yearPicker = __webpack_require__(15);
+
+var _yearPicker2 = _interopRequireDefault(_yearPicker);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -1609,7 +1663,7 @@ function YearPicker() {
       maxYear: '&'
     },
     controller: YearPickerController,
-    templateUrl: 'app/directives/year-picker/year-picker.html',
+    template: _yearPicker2.default,
     controllerAs: 'yearPicker',
     bindToController: true
   };
@@ -1677,7 +1731,13 @@ var YearPickerController = function () {
 }();
 
 /***/ }),
-/* 11 */
+/* 15 */
+/***/ (function(module, exports) {
+
+module.exports = "<select ng-options= 'year.value as year.label for year in yearPicker.years'\n        ng-model= 'yearPicker.selectedYear'\n        ng-change='yearPicker.onYearChange()' />\n";
+
+/***/ }),
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1691,6 +1751,12 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 exports.MonthPicker = MonthPicker;
 
+var _monthPicker = __webpack_require__(17);
+
+var _monthPicker2 = _interopRequireDefault(_monthPicker);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function MonthPicker() {
@@ -1703,7 +1769,7 @@ function MonthPicker() {
       monthChanged: '&?'
     },
     controller: MonthPickerController,
-    templateUrl: 'app/directives/month-picker/month-picker.html',
+    template: _monthPicker2.default,
     controllerAs: 'monthPicker',
     bindToController: true
   };
@@ -1757,7 +1823,13 @@ var MonthPickerController = function () {
 }();
 
 /***/ }),
-/* 12 */
+/* 17 */
+/***/ (function(module, exports) {
+
+module.exports = "<select ng-options= 'month.value as month.label for month in monthPicker.months'\n        ng-model= 'monthPicker.selectedMonth'\n        ng-change='monthPicker.onMonthChange()'/>\n\n";
+
+/***/ }),
+/* 18 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

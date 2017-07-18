@@ -1,4 +1,5 @@
 import './ob-date-range-picker.scss';
+import template from './ob-date-range-picker.html';
 
 export function ObDateRangePicker() {
   'ngInject';
@@ -24,7 +25,7 @@ export function ObDateRangePicker() {
       api: '=?'
     },
     controller: ObDateRangePickerController,
-    templateUrl: 'app/directives/ob-date-range-picker/ob-date-range-picker.html',
+    template,
     controllerAs: 'obDateRangePicker',
     bindToController: true
   };

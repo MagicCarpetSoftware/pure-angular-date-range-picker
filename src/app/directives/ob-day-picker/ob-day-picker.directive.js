@@ -1,4 +1,5 @@
 import './ob-day-picker.scss';
+import template from './ob-day-picker.html';
 
 export function ObDayPicker() {
   'ngInject';
@@ -23,7 +24,7 @@ export function ObDayPicker() {
       api: '=?'
     },
     controller: ObDayPickerController,
-    templateUrl: 'app/directives/ob-day-picker/ob-day-picker.html',
+    template,
     controllerAs: 'dayPicker',
     bindToController: true
   };

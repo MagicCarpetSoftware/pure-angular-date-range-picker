@@ -1,4 +1,5 @@
 import './date-range-picker.scss'
+import template from './date-range-picker.html';
 
 export function DateRangePicker() {
   'ngInject';
@@ -17,7 +18,7 @@ export function DateRangePicker() {
       linkedCalendars: '&',
       interceptors: '&'
     },
-    templateUrl: 'app/directives/date-range-picker/date-range-picker.html',
+    template,
     controller: DateRangePickerController,
     controllerAs: 'picker',
     bindToController: true

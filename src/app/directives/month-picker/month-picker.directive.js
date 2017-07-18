@@ -1,3 +1,5 @@
+import template from './month-picker.html';
+
 export function MonthPicker() {
   'ngInject';
 
@@ -8,7 +10,7 @@ export function MonthPicker() {
       monthChanged: '&?'
     },
     controller: MonthPickerController,
-    templateUrl: 'app/directives/month-picker/month-picker.html',
+    template,
     controllerAs: 'monthPicker',
     bindToController: true
   };
